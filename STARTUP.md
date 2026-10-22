@@ -22,19 +22,29 @@ Care Passport is a zero-knowledge medical records exchange powered by TideCloak.
    Open your browser to:
    👉 **`http://localhost:8088`**
 
-3. **Run the Automated Cryptographic Test Suite**:
+3. **Run the Automated Test Suites**:
    In another terminal (or while the server is active):
    ```bash
    cd care-passport
+
+   # 1. Automated Webpage & Persona Journey Test (8 Tests)
+   npm run test:webpage
+
+   # 2. Cryptographic Security Invariant Test Suite (10 Tests)
    npm test
    ```
-   *Expected output*: `🎉 ALL 5 INTEGRATION TESTS PASSED (100% SUCCESS)`.
+   *Expected output*: `🎉 ALL 10 COMPLIANCE & INTEGRATION TESTS PASSED (100% SUCCESS)`.
+
+### 📖 Full Interactive Testing Walkthrough
+For the complete step-by-step demonstration and manual testing guide across all personas, see:
+👉 [TESTING_WALKTHROUGH.md](file:///care-passport/TESTING_WALKTHROUGH.md)
 
 ### Key Interactive Flows to Try
-- **Patient Dashboard**: Sarah Connor reviews records and grants access to Dr. Kevin Chen (Cardiology).
-- **Clinician Dashboard**: Dr. Chen decrypts the granted Cardiology report client-side. Attempting to view ungranted psychiatric records triggers an immediate `TIDE-TIDEJS-NET-THRESHOLD_FAILURE` (0/20 ORK Quorum).
-- **Revocation**: Sarah revokes the grant in real time; Dr. Chen is immediately locked out.
-- **Rogue DB Admin**: Switch to the Admin view to verify that raw database tables contain only AES-256-GCM ciphertext blobs.
+- **Patient Dashboard**: Sarah Connor reviews records and grants access to Dr. Marcus Chen (Cardiology) or CardioScan-AI.
+- **Clinician Dashboard**: Dr. Chen decrypts the granted Cardiology report client-side. Attempting to view ungranted psychiatric records triggers an immediate `0/20 ORK Quorum Refusal`.
+- **Autonomous AI Persona (CardioScan-AI)**: Ephemeral 1-hour volatile RAM inference with 0 training retention, and strict mathematical blocking of lateral data exfiltration attempts.
+- **Zero-Delay Revocation**: Sarah revokes the grant in real time; access is immediately revoked and persists across page refreshes.
+- **Rogue DB Admin & Subpoena Simulator**: Inspect raw server database ciphertext and trigger server root override to prove server access does not grant decryption authority.
 
 ---
 

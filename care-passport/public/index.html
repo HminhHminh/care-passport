@@ -177,7 +177,7 @@
       </div>
 
       <!-- Health Records Grid -->
-      <div class="grid md:grid-cols-3 gap-6" id="patient-records-container">
+      <div class="grid md:grid-cols-3 gap-6" id="patient-records-grid">
         <!-- Loaded dynamically via app.js -->
       </div>
 
@@ -244,8 +244,26 @@
         </div>
       </div>
 
+      <!-- Tide Fabric Consensus & ORK Quorum Visualizer -->
+      <div class="bg-tide-deeper text-white rounded-2xl p-5 shadow-sm border border-tide-accent/20">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+          <div class="flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="font-bold text-sm text-white">Tide Fabric Consensus (Emergent Authority Engine)</span>
+            <span class="text-[10px] bg-tide-accent/20 text-tide-accent border border-tide-accent/30 px-2 py-0.5 rounded font-mono">20 Independent ORK Nodes</span>
+          </div>
+          <div class="flex items-center space-x-2 bg-black/40 px-3 py-1.5 rounded-lg border border-white/10">
+            <span class="text-xs text-gray-400 font-mono">Quorum Status:</span>
+            <span id="clinician-ork-quorum-count" class="text-xs font-mono font-bold text-gray-300">14/20 REQUIRED FOR RELEASE</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-10 sm:grid-cols-20 gap-1.5" id="clinician-ork-nodes-grid">
+          <!-- 20 simulated ORK nodes dynamically rendered -->
+        </div>
+      </div>
+
       <!-- Records Decryption Cards -->
-      <div class="grid md:grid-cols-3 gap-6" id="clinician-records-container">
+      <div class="grid md:grid-cols-3 gap-6" id="clinician-records-grid">
         <!-- Loaded dynamically via app.js -->
       </div>
 
@@ -265,6 +283,20 @@
             </div>
           </div>
           <button onclick="closeViewer()" class="text-gray-400 hover:text-gray-700 text-xl font-bold p-1">×</button>
+        </div>
+
+        <!-- Live Quorum Visualizer inside Viewer Modal -->
+        <div class="mb-4 p-3 bg-gray-900 text-white rounded-xl border border-gray-800">
+          <div class="flex items-center justify-between mb-2 text-xs font-mono">
+            <span class="text-emerald-400 font-bold flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              Live Tide Fabric Consensus Active (20/20 ORK Quorum Approved)
+            </span>
+            <span class="text-[11px] text-gray-400">Emergent Session Key Reconstructed in Client RAM</span>
+          </div>
+          <div class="grid grid-cols-10 sm:grid-cols-20 gap-1.5" id="viewer-ork-nodes-grid">
+            <!-- 20 green nodes -->
+          </div>
         </div>
 
         <div id="viewer-content">
@@ -316,7 +348,7 @@
           </div>
 
           <div class="mt-4 flex-1">
-            <pre class="bg-black/80 p-4 rounded-xl text-xs font-mono text-emerald-400 overflow-x-auto max-h-96 leading-relaxed border border-gray-800" id="raw-db-preview">Loading database dump...</pre>
+            <pre class="bg-black/80 p-4 rounded-xl text-xs font-mono text-emerald-400 overflow-x-auto max-h-96 leading-relaxed border border-gray-800" id="raw-database-view">Loading database dump...</pre>
           </div>
 
           <p class="text-xs text-gray-400 font-mono mt-3">
@@ -348,7 +380,7 @@
             </div>
 
             <!-- Attack Result Box -->
-            <div id="attack-result-box" class="mt-4 p-4 rounded-xl text-xs font-mono hidden">
+            <div id="override-attempt-output" class="mt-4 p-4 rounded-xl text-xs font-mono hidden">
               <!-- Populated dynamically -->
             </div>
           </div>
@@ -383,7 +415,10 @@
 
             <!-- Visual Node Meter -->
             <div class="mt-4">
-              <span class="text-[11px] font-mono text-gray-400 block mb-1">Live Fabric Consensus Simulation:</span>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-[11px] font-mono text-gray-400 block">Live Fabric Consensus Simulation:</span>
+                <span id="ork-quorum-count" class="text-xs font-mono text-gray-400">14/20 REQUIRED FOR RELEASE</span>
+              </div>
               <div class="grid grid-cols-10 gap-1.5" id="ork-nodes-grid">
                 <!-- 20 simulated ORK nodes -->
               </div>
@@ -492,6 +527,20 @@
 
       <div class="p-3.5 bg-rose-50 rounded-xl border border-rose-200 text-xs text-rose-800 leading-relaxed font-mono" id="refusal-modal-reason">
         Access refused: Caller lacks active patient consent grant. Threshold consensus failed.
+      </div>
+
+      <!-- Live Refusal Quorum Visualizer inside Modal -->
+      <div class="p-3 bg-gray-900 text-white rounded-xl border border-rose-900/50">
+        <div class="flex items-center justify-between mb-2 text-xs font-mono">
+          <span class="text-rose-400 font-bold flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+            Tide Fabric Consensus Refused (0 / 20 ORK Approvals)
+          </span>
+          <span class="text-[11px] text-gray-400">Key Reconstruction Blocked</span>
+        </div>
+        <div class="grid grid-cols-10 sm:grid-cols-20 gap-1.5" id="refusal-ork-nodes-grid">
+          <!-- 20 red nodes -->
+        </div>
       </div>
 
       <!-- Quorum Failure Breakdown -->

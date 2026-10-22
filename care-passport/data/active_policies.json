@@ -72,42 +72,6 @@
     "revokedBy": "sarah_connor"
   },
   {
-    "policyId": "pol_rel_mvjaq5jp",
-    "contractId": "RelationshipAttestation:1",
-    "recordId": "rec_cardio_9812",
-    "subject": {
-      "type": "User",
-      "id": "usr_key_ai_cardioscan_v3",
-      "name": "CardioScan-AI Diagnostic Agent",
-      "role": "diagnostic_ai"
-    },
-    "access": "read",
-    "policyB64": "AQAAAHoBAAABAAAAAQAAADQZAAAAUmVsYXRpb25zaGlwQXR0ZXN0YXRpb246MT4AAAABAAAAGQAAAFBvbGljeUVuYWJsZWRFbmNyeXB0aW9uOjEZAAAAUG9saWN5RW5hYmxlZERlY3J5cHRpb246MSQAAAAwMzA1NDc2MC0yNGNlLTQzYTQtOWIzOC00N2NhMjQxMmZjZGUIAAAASU1QTElDSVQHAAAAUFJJVkFURcMAAAABAAAAIgAAAAEAAAALAAAAc3ViamVjdFR5cGUDAAAAc3RyBAAAAFVzZXI0AAAAAQAAAAkAAABzdWJqZWN0SWQDAAAAc3RyGAAAAHVzcl9rZXlfYWlfY2FyZGlvc2Nhbl92My4AAAABAAAADAAAAGFzc2lnbm1lbnRJZAMAAABzdHIPAAAAcmVjX2NhcmRpb185ODEyKwAAAAEAAAAFAAAAcm9sZXMDAAAAc3RyEwAAAFsiX3RpZGVfZGVjcnlwdG9yIl0IAAAAQNvZagAAAAA=",
-    "grantedBy": "sarah_connor",
-    "createdAt": "2026-10-22T08:45:36.277Z",
-    "status": "revoked",
-    "revokedAt": "2026-10-22T08:45:36.293Z",
-    "revokedBy": "sarah_connor"
-  },
-  {
-    "policyId": "pol_rel_mvjaq5gp",
-    "contractId": "RelationshipAttestation:1",
-    "recordId": "rec_cardio_9812",
-    "subject": {
-      "type": "User",
-      "id": "usr_key_dr_chen_cardio_456",
-      "name": "Dr. Marcus Chen",
-      "role": "clinician_specialist"
-    },
-    "access": "read",
-    "policyB64": "AQAAAHwBAAABAAAAAQAAADQZAAAAUmVsYXRpb25zaGlwQXR0ZXN0YXRpb246MT4AAAABAAAAGQAAAFBvbGljeUVuYWJsZWRFbmNyeXB0aW9uOjEZAAAAUG9saWN5RW5hYmxlZERlY3J5cHRpb246MSQAAAAwMzA1NDc2MC0yNGNlLTQzYTQtOWIzOC00N2NhMjQxMmZjZGUIAAAASU1QTElDSVQHAAAAUFJJVkFURcUAAAABAAAAIgAAAAEAAAALAAAAc3ViamVjdFR5cGUDAAAAc3RyBAAAAFVzZXI2AAAAAQAAAAkAAABzdWJqZWN0SWQDAAAAc3RyGgAAAHVzcl9rZXlfZHJfY2hlbl9jYXJkaW9fNDU2LgAAAAEAAAAMAAAAYXNzaWdubWVudElkAwAAAHN0cg8AAAByZWNfY2FyZGlvXzk4MTIrAAAAAQAAAAUAAAByb2xlcwMAAABzdHITAAAAWyJfdGlkZV9kZWNyeXB0b3IiXQgAAACwwd1qAAAAAA==",
-    "grantedBy": "sarah_connor",
-    "createdAt": "2026-10-22T08:45:36.169Z",
-    "status": "revoked",
-    "revokedAt": "2026-10-22T08:45:36.179Z",
-    "revokedBy": "sarah_connor"
-  },
-  {
     "policyId": "pol_rel_mvj8oamr",
     "contractId": "RelationshipAttestation:1",
     "recordId": "rec_cardio_9812",
@@ -165,52 +129,6 @@
     "expiresAt": "2026-10-22T15:56:12.176Z",
     "signature": "vvk_sig_f10c3a36bfa6a8380a28da863719ae0d407690a1dbaa183800085f589f3c1c5e",
     "revokedAt": "2026-10-22T03:56:12.179Z"
-  },
-  {
-    "policyId": "pol_rel_mvj0dmvi",
-    "contractId": "RelationshipAttestation:1",
-    "modelIds": [
-      "PolicyEnabledEncryption:1",
-      "PolicyEnabledDecryption:1"
-    ],
-    "executionType": "PRIVATE",
-    "approvalType": "IMPLICIT",
-    "recordId": "rec_psych_4509",
-    "subjectType": "User",
-    "subjectId": "usr_key_dr_marcus_gp_987",
-    "subjectName": "Dr. Alice Marcus",
-    "subjectRole": "clinician_gp",
-    "roles": [
-      "_tide_decryptor"
-    ],
-    "status": "revoked",
-    "createdAt": "2026-10-22T03:55:56.046Z",
-    "expiresAt": "2026-10-22T15:55:56.046Z",
-    "signature": "vvk_sig_860b308e10844c84ecb5e31dc9790b4fe5119a605833255898dee88f1e1a9836",
-    "revokedAt": "2026-10-22T03:55:56.049Z"
-  },
-  {
-    "policyId": "pol_rel_mvj0cbis",
-    "contractId": "RelationshipAttestation:1",
-    "modelIds": [
-      "PolicyEnabledEncryption:1",
-      "PolicyEnabledDecryption:1"
-    ],
-    "executionType": "PRIVATE",
-    "approvalType": "IMPLICIT",
-    "recordId": "rec_psych_4509",
-    "subjectType": "User",
-    "subjectId": "usr_key_dr_marcus_gp_987",
-    "subjectName": "Dr. Alice Marcus",
-    "subjectRole": "clinician_gp",
-    "roles": [
-      "_tide_decryptor"
-    ],
-    "status": "revoked",
-    "createdAt": "2026-10-22T03:54:54.676Z",
-    "expiresAt": "2026-10-22T15:54:54.676Z",
-    "signature": "vvk_sig_5d62a927f07da048697dd09c4fb5fa8c4880c158e1ded161724367ed9051a81a",
-    "revokedAt": "2026-10-22T03:54:54.680Z"
   },
   {
     "policyId": "pol_rel_mviznvd9",
