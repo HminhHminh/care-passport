@@ -162,5 +162,37 @@
       "providerId": "UPDATE_PASSWORD",
       "enabled": false
     }
+  ],
+  "users": [
+    {
+      "username": "sarah_connor",
+      "email": "sarah.connor@carepassport.local",
+      "firstName": "Sarah",
+      "lastName": "Connor",
+      "enabled": true,
+      "emailVerified": true,
+      "realmRoles": ["_tide_enabled", "_tide_encryptor", "_tide_decryptor", "appUser"],
+      "requiredActions": ["link-tide-account-action"]
+    },
+    {
+      "username": "dr_marcus",
+      "email": "alice.marcus@carepassport.local",
+      "firstName": "Alice",
+      "lastName": "Marcus",
+      "enabled": true,
+      "emailVerified": true,
+      "realmRoles": ["_tide_enabled", "_tide_decryptor", "appUser"],
+      "requiredActions": ["link-tide-account-action"]
+    },
+    {
+      "username": "dr_chen",
+      "email": "marcus.chen@carepassport.local",
+      "firstName": "Marcus",
+      "lastName": "Chen",
+      "enabled": true,
+      "emailVerified": true,
+      "realmRoles": ["_tide_enabled", "_tide_decryptor", "appUser"],
+      "requiredActions": ["link-tide-account-action"]
+    }
   ]
 }

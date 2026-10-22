@@ -1,5 +1,41 @@
 [
   {
+    "policyId": "pol_rel_mvj8oamr",
+    "contractId": "RelationshipAttestation:1",
+    "recordId": "rec_cardio_9812",
+    "subject": {
+      "type": "User",
+      "id": "usr_key_dr_chen_cardio_456",
+      "name": "Dr. Marcus Chen",
+      "role": "clinician_specialist"
+    },
+    "access": "read",
+    "policyB64": "AQAAAHwBAAABAAAAAQAAADQZAAAAUmVsYXRpb25zaGlwQXR0ZXN0YXRpb246MT4AAAABAAAAGQAAAFBvbGljeUVuYWJsZWRFbmNyeXB0aW9uOjEZAAAAUG9saWN5RW5hYmxlZERlY3J5cHRpb246MSQAAAAwMzA1NDc2MC0yNGNlLTQzYTQtOWIzOC00N2NhMjQxMmZjZGUIAAAASU1QTElDSVQHAAAAUFJJVkFURcUAAAABAAAAIgAAAAEAAAALAAAAc3ViamVjdFR5cGUDAAAAc3RyBAAAAFVzZXI2AAAAAQAAAAkAAABzdWJqZWN0SWQDAAAAc3RyGgAAAHVzcl9rZXlfZHJfY2hlbl9jYXJkaW9fNDU2LgAAAAEAAAAMAAAAYXNzaWdubWVudElkAwAAAHN0cg8AAAByZWNfY2FyZGlvXzk4MTIrAAAAAQAAAAUAAAByb2xlcwMAAABzdHITAAAAWyJfdGlkZV9kZWNyeXB0b3IiXQgAAAA6tN1qAAAAAA==",
+    "grantedBy": "sarah_connor",
+    "createdAt": "2026-10-22T07:48:10.323Z",
+    "status": "revoked",
+    "revokedAt": "2026-10-22T07:48:10.335Z",
+    "revokedBy": "sarah_connor"
+  },
+  {
+    "policyId": "pol_rel_mvj8eutz",
+    "contractId": "RelationshipAttestation:1",
+    "recordId": "rec_cardio_9812",
+    "subject": {
+      "type": "User",
+      "id": "usr_key_dr_chen_cardio_456",
+      "name": "Dr. Marcus Chen",
+      "role": "clinician_specialist"
+    },
+    "access": "read",
+    "policyB64": "AQAAAHwBAAABAAAAAQAAADQZAAAAUmVsYXRpb25zaGlwQXR0ZXN0YXRpb246MT4AAAABAAAAGQAAAFBvbGljeUVuYWJsZWRFbmNyeXB0aW9uOjEZAAAAUG9saWN5RW5hYmxlZERlY3J5cHRpb246MSQAAAAwMzA1NDc2MC0yNGNlLTQzYTQtOWIzOC00N2NhMjQxMmZjZGUIAAAASU1QTElDSVQHAAAAUFJJVkFURcUAAAABAAAAIgAAAAEAAAALAAAAc3ViamVjdFR5cGUDAAAAc3RyBAAAAFVzZXI2AAAAAQAAAAkAAABzdWJqZWN0SWQDAAAAc3RyGgAAAHVzcl9rZXlfZHJfY2hlbl9jYXJkaW9fNDU2LgAAAAEAAAAMAAAAYXNzaWdubWVudElkAwAAAHN0cg8AAAByZWNfY2FyZGlvXzk4MTIrAAAAAQAAAAUAAAByb2xlcwMAAABzdHITAAAAWyJfdGlkZV9kZWNyeXB0b3IiXQgAAACBst1qAAAAAA==",
+    "grantedBy": "sarah_connor",
+    "createdAt": "2026-10-22T07:40:49.943Z",
+    "status": "revoked",
+    "revokedAt": "2026-10-22T07:40:49.964Z",
+    "revokedBy": "sarah_connor"
+  },
+  {
     "policyId": "pol_rel_mvj0dzbk",
     "contractId": "RelationshipAttestation:1",
     "modelIds": [

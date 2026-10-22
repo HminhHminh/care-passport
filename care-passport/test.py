@@ -125,10 +125,16 @@ except urllib.error.HTTPError as e:
     assert e.code == 403, f"Expected 403, got {e.code}"
     err = json.loads(e.read().decode("utf-8"))
     assert err["error"] == "TIDE-INVARIANT-I09-BREACH-BLOCKED"
-    print(f"   ✓ Server rejected unilateral root override with HTTP 403")
+    assert "serverSideExecution" in err, "Expected real server-side execution details"
+    exec_info = err["serverSideExecution"]
+    assert "cryptographicFailure" in exec_info, "Expected cryptographic failure message"
+    assert "Decryption failed" in exec_info["cryptographicFailure"], f"Unexpected failure: {exec_info['cryptographicFailure']}"
+    assert exec_info["keysInServerMemory"] == 0
+    assert exec_info["keysInDatabase"] == 0
+    print(f"   ✓ Server attempted in-process decipher and failed cryptographically")
+    print(f"   ✓ Real Cryptographic Failure: {exec_info['cryptographicFailure']}")
     print(f"   ✓ Invariant enforced: {err['error']}")
-    print(f"   ✓ Impossibility message: {err['message']}")
-print("✅ [PASS] Test 5: Rogue Admin bypass blocked by Emergent Authority.\n")
+print("✅ [PASS] Test 5: Real Rogue Admin decipher attempt failed by Emergent Authority.\n")
 
 # -------------------------------------------------------------
 # Test 6: Client-Side Policy Engine (tide-bundle.js)
@@ -157,6 +163,136 @@ assert result.returncode == 0, f"Policy serialization failed: {result.stderr}"
 print("   ✓ Binary policy builder & parser verified with @tideorg/js Models.Policy")
 print("✅ [PASS] Test 6: Client policy engine verified.\n")
 
+# -------------------------------------------------------------
+# Test 7: Zero Key Material in Client Assets (Invariant I-01 & I-11)
+# -------------------------------------------------------------
+print("▶ [Test 7] Verifying zero key material in public directory and served bundles...")
+import re, os
+public_dir = os.path.join(os.path.dirname(__file__), "public")
+forbidden_strings = [
+    "CLIENT_DEMO_KEYS",
+    "decryptRecordClientSide",
+    "351820290e2a088c6752144961c7163c",
+    "26ad01095f11e7b8ae65dca364b916c9",
+    "2683db04f234ad307895adf9d1892faf",
+    "BEGIN PRIVATE KEY",
+    "BEGIN EC PRIVATE KEY",
+    "BEGIN RSA PRIVATE KEY"
+]
+
+for root, _, files in os.walk(public_dir):
+    for fname in files:
+        if fname.endswith((".js", ".html", ".json")):
+            fpath = os.path.join(root, fname)
+            with open(fpath, "r", encoding="utf-8", errors="ignore") as f:
+                file_content = f.read()
+            for s in forbidden_strings:
+                assert s not in file_content, f"SECURITY AUDIT FAILURE: Key material '{s}' found in {fname}!"
+
+# Verify live served /app.js
+app_res = opener.open(f"{BASE_URL}/app.js")
+app_src = app_res.read().decode("utf-8")
+assert "CLIENT_DEMO_KEYS" not in app_src, "CLIENT_DEMO_KEYS found in served /app.js"
+assert "decryptRecordClientSide" not in app_src, "Fallback decryptRecordClientSide found in served /app.js"
+assert "decryptForRecord" in app_src, "decryptForRecord missing from served /app.js"
+
+print("   ✓ Scanned public/ assets: Zero hardcoded keys or fallback decryptors found")
+print("   ✓ Verified served /app.js: Sole decrypt path is decryptForRecord() through Tide")
+print("✅ [PASS] Test 7: Zero key material in public assets confirmed.\n")
+
+# -------------------------------------------------------------
+# Test 8: Dynamic Policy Grant (POST /api/policies)
+# -------------------------------------------------------------
+print("▶ [Test 8] Testing dynamic RelationshipAttestation:1 policy grant...")
+# Generate a real binary policy model via Node
+gen_res = subprocess.run([
+    "node", "--input-type=module", "-e",
+    """
+    import('./public/tide-bundle.js').then(m => {
+        const p = m.buildRelationshipPolicy({
+            vendorId: "03054760-24ce-43a4-9b38-47ca2412fcde",
+            subject: { type: "User", id: "usr_key_dr_chen_cardio_456" },
+            recordId: "rec_cardio_9812",
+            access: "read",
+            expiry: Math.floor(Date.now() / 1000) + 72 * 3600
+        });
+        process.stdout.write(Buffer.from(p.toBytes()).toString("base64"));
+    });
+    """
+], capture_output=True, text=True, cwd=os.path.dirname(__file__))
+
+assert gen_res.returncode == 0, f"Policy generation failed: {gen_res.stderr}"
+sample_policy_b64 = gen_res.stdout.strip()
+
+grant_payload = json.dumps({
+    "recordId": "rec_cardio_9812",
+    "subject": {
+        "type": "User",
+        "id": "usr_key_dr_chen_cardio_456",
+        "name": "Dr. Marcus Chen",
+        "role": "clinician_specialist"
+    },
+    "access": "read",
+    "policy": sample_policy_b64
+}).encode("utf-8")
+
+req = urllib.request.Request(
+    f"{BASE_URL}/api/policies",
+    data=grant_payload,
+    headers={"Content-Type": "application/json"}
+)
+res = opener.open(req)
+assert res.status == 200
+grant_data = json.loads(res.read().decode("utf-8"))
+assert grant_data["success"] is True
+created_policy = grant_data["policy"]
+created_policy_id = created_policy["policyId"]
+assert created_policy["status"] == "active"
+assert created_policy["recordId"] == "rec_cardio_9812"
+print(f"   ✓ Registered dynamic policy: {created_policy_id}")
+print(f"   ✓ Contract verified: {created_policy['contractId']}")
+print(f"   ✓ Subject: {created_policy['subject']['name']} ({created_policy['subject']['id']})")
+print("✅ [PASS] Test 8: Dynamic policy grant verified.\n")
+
+# -------------------------------------------------------------
+# Test 9: Zero-Delay Revocation & Persistence (POST /api/policies/revoke)
+# -------------------------------------------------------------
+print("▶ [Test 9] Testing cryptographic policy revocation and server persistence...")
+revoke_payload = json.dumps({
+    "policyId": created_policy_id
+}).encode("utf-8")
+
+req = urllib.request.Request(
+    f"{BASE_URL}/api/policies/revoke",
+    data=revoke_payload,
+    headers={"Content-Type": "application/json"}
+)
+res = opener.open(req)
+assert res.status == 200
+revoke_data = json.loads(res.read().decode("utf-8"))
+assert revoke_data["success"] is True
+assert revoke_data["policy"]["status"] == "revoked"
+assert "revokedAt" in revoke_data["policy"]
+
+# Verify persistence across subsequent GET /api/policies
+res_check = opener.open(f"{BASE_URL}/api/policies")
+all_policies = json.loads(res_check.read().decode("utf-8"))
+persisted = next((p for p in all_policies if p["policyId"] == created_policy_id), None)
+assert persisted is not None, "Revoked policy was not found in persistent store!"
+assert persisted["status"] == "revoked", f"Expected status 'revoked', got {persisted['status']}"
+assert "revokedAt" in persisted, "Missing revokedAt timestamp in persistent store"
+
+# Verify audit log recorded revocation event
+res_audit = opener.open(f"{BASE_URL}/api/audit-log")
+audits = json.loads(res_audit.read().decode("utf-8"))
+revocation_audit = next((a for a in audits if a["event"] == "POLICY_REVOCATION_EXECUTED"), None)
+assert revocation_audit is not None, "Missing POLICY_REVOCATION_EXECUTED in audit log"
+
+print(f"   ✓ Revocation executed on server for: {created_policy_id}")
+print(f"   ✓ Status confirmed in persistent storage: {persisted['status']}")
+print(f"   ✓ Audit log stream updated: {revocation_audit['event']} ({revocation_audit['status']})")
+print("✅ [PASS] Test 9: Zero-Delay Revocation & Persistence verified.\n")
+
 print("=" * 65)
-print("  🎉 ALL 6 COMPLIANCE & INTEGRATION TESTS PASSED (100% SUCCESS)")
+print("  🎉 ALL 9 COMPLIANCE & INTEGRATION TESTS PASSED (100% SUCCESS)")
 print("=" * 65 + "\n")

@@ -468,6 +468,53 @@
     </div>
   </div>
 
+  <!-- TIDE FABRIC CRYPTOGRAPHIC REFUSAL MODAL -->
+  <div id="fabric-refusal-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border-2 border-rose-500/40 space-y-4">
+      <div class="flex items-start space-x-3">
+        <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-2xl flex-shrink-0">
+          &#9940;
+        </div>
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-gray-900" id="refusal-modal-title">Tide Fabric Cryptographic Refusal</h3>
+          <p class="text-xs text-rose-600 font-mono mt-0.5" id="refusal-modal-contract">Contract: RelationshipAttestation:1 · Invariant: I-07</p>
+        </div>
+        <button onclick="closeFabricRefusalModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="p-3.5 bg-rose-50 rounded-xl border border-rose-200 text-xs text-rose-800 leading-relaxed font-mono" id="refusal-modal-reason">
+        Access refused: Caller lacks active patient consent grant. Threshold consensus failed.
+      </div>
+
+      <!-- Quorum Failure Breakdown -->
+      <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-200 font-mono text-xs space-y-1.5">
+        <div class="flex justify-between text-gray-600">
+          <span>ORK Nodes Approving:</span>
+          <span class="text-rose-600 font-bold" id="refusal-modal-approved">0 / 20</span>
+        </div>
+        <div class="flex justify-between text-gray-600">
+          <span>ORK Nodes Rejecting:</span>
+          <span class="text-gray-800 font-bold" id="refusal-modal-rejected">20 / 20</span>
+        </div>
+        <div class="flex justify-between text-gray-600">
+          <span>Required Threshold:</span>
+          <span class="text-gray-800 font-bold">14 / 20 Nodes</span>
+        </div>
+        <div class="flex justify-between border-t border-gray-200 pt-1.5 text-gray-600">
+          <span>Consensus Outcome:</span>
+          <span class="text-rose-700 font-bold">Key Reconstruction REFUSED (Mathematical Lock)</span>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2">
+        <button onclick="closeFabricRefusalModal()" class="px-5 py-2 text-sm font-bold bg-gray-900 hover:bg-black text-white rounded-xl shadow">Acknowledge Invariant</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
   <!-- SCRIPTS -->
   <script type="module" src="/app.js"></script>
 </body>

@@ -18,6 +18,13 @@ let cachedPolicies = [];
 let activeAuditLogs = [];
 
 const CLINICIAN_PROFILES = {
+  dr_marcus: {
+    id: "usr_key_dr_marcus_gp_987",
+    name: "Dr. Alice Marcus",
+    title: "General Practitioner",
+    role: "clinician_gp",
+    color: "teal"
+  },
   clinician_gp: {
     id: "usr_key_dr_marcus_gp_987",
     name: "Dr. Alice Marcus",
@@ -25,23 +32,72 @@ const CLINICIAN_PROFILES = {
     role: "clinician_gp",
     color: "teal"
   },
+  dr_chen: {
+    id: "usr_key_dr_chen_cardio_456",
+    name: "Dr. Marcus Chen",
+    title: "Cardiologist",
+    role: "clinician_specialist",
+    color: "blue"
+  },
   clinician_specialist: {
     id: "usr_key_dr_chen_cardio_456",
     name: "Dr. Marcus Chen",
     title: "Cardiologist",
     role: "clinician_specialist",
     color: "blue"
+  },
+  dr_vance: {
+    id: "usr_key_dr_vance_psych_789",
+    name: "Dr. Elena Vance",
+    title: "Consultant Psychiatrist",
+    role: "clinician_specialist",
+    color: "purple"
   }
 };
 
-// Client-side decryption session keys for offline judging demonstration
-// Note: In TideCloak architecture, keys emerge in the client browser enclave;
-// the server database holds zero keys and never decrypts.
-const CLIENT_DEMO_KEYS = {
-  rec_lipid_1044: "351820290e2a088c6752144961c7163c130d0f5727fc8637ffe09511dc129933",
-  rec_cardio_9812: "26ad01095f11e7b8ae65dca364b916c98fa71bf617ed5d5eb2e27207f5858bac",
-  rec_psych_4509: "2683db04f234ad307895adf9d1892faf330aa5ebd1c90751807b1ee800ea85a4"
-};
+async function getAuthHeaders() {
+  const headers = {};
+  try {
+    if (IAMService && typeof IAMService.isAuthenticated === "function" && IAMService.isAuthenticated()) {
+      const token = await IAMService.getToken();
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+    }
+  } catch (err) {
+    console.debug("No active token in context:", err.message);
+  }
+  return headers;
+}
+
+function showNotification(title, message, type = "info") {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  const bgColor = type === "success" ? "bg-emerald-900 border-emerald-400" : type === "error" ? "bg-rose-900 border-rose-400" : "bg-gray-900 border-gray-600";
+  const icon = type === "success" ? "✅" : type === "error" ? "⛔" : "ℹ️";
+
+  toast.className = `pointer-events-auto transform transition-all duration-300 ease-out translate-y-2 opacity-0 text-white px-4 py-3 rounded-xl border shadow-xl flex items-start space-x-3 text-xs font-mono max-w-sm ${bgColor}`;
+  toast.innerHTML = `
+    <span class="text-base">${icon}</span>
+    <div class="flex-1">
+      <div class="font-bold text-sm leading-tight">${title}</div>
+      <div class="text-gray-200 mt-0.5 text-xs">${message}</div>
+    </div>
+  `;
+
+  container.appendChild(toast);
+  requestAnimationFrame(() => {
+    toast.classList.remove("translate-y-2", "opacity-0");
+  });
+
+  setTimeout(() => {
+    toast.classList.add("opacity-0", "translate-y-2");
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
 
 // --- INITIALIZATION ---
 document.addEventListener("DOMContentLoaded", async () => {
@@ -342,72 +398,32 @@ async function requestDecryption(recordId) {
   }
 
   try {
-    let clinicalData = null;
-
-    // Check if Tide live SDK is available and authenticated
-    if (IAMService && typeof IAMService.isAuthenticated === "function" && IAMService.isAuthenticated()) {
-      try {
-        const decryptedStr = await decryptForRecord(rec.ciphertext, recordId, activeGrant.policyB64 || "");
-        clinicalData = JSON.parse(decryptedStr);
-      } catch (err) {
-        console.warn("Tide live SDK decrypt notice:", err);
-      }
-    }
-
-    if (!clinicalData) {
-      // Client-side Web Crypto decryption for offline demo records
-      clinicalData = await decryptRecordClientSide(rec);
-    }
+    // Invariant I-01 & I-11: Sole decrypt path is decryptForRecord() through Tide
+    // Zero client-side fallback keys exist. Keys emerge in browser memory only upon ORK consensus.
+    const decryptedStr = await decryptForRecord(rec.ciphertext, recordId, activeGrant.policyB64 || "");
+    const clinicalData = JSON.parse(decryptedStr);
 
     renderDecryptedViewer({
       title: rec.title,
       patientName: rec.patientName,
       policyUsed: activeGrant.policyId,
-      clinicalData: clinicalData
+      clinicalData: clinicalData,
+      networkResult: "Consensus Verified (Emergent Authority)"
     });
 
-    renderOrkNodes(20, 0); // 20 of 20 ORK nodes approved
+    renderOrkNodes(20, 0); // 20/20 active consensus
     fetchAuditLogs();
   } catch (err) {
-    alert("Client-side decryption error: " + err.message);
+    console.error("Tide Emergent Authority Decryption Failure:", err);
+    renderOrkNodes(0, 20); // 0/20 threshold refusal
+    showFabricRefusalModal({
+      error: "TIDE-TIDEJS-NET-THRESHOLD_FAILURE",
+      code: 403,
+      contract: "RelationshipAttestation:1",
+      reason: err.cause || err.message || "Tide Fabric consensus threshold failed. No emergent key shares released."
+    });
+    fetchAuditLogs();
   }
-}
-
-// Client-side AES-256-GCM decryptor using Web Crypto API
-async function decryptRecordClientSide(rec) {
-  const hexKey = CLIENT_DEMO_KEYS[rec.id];
-  if (!hexKey) throw new Error("Key not registered for assignmentId");
-
-  const keyBytes = new Uint8Array(hexKey.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-  const ivBytes = Uint8Array.from(atob(rec.iv), c => c.charCodeAt(0));
-  const ciphertextBytes = Uint8Array.from(atob(rec.ciphertext), c => c.charCodeAt(0));
-  const authTagBytes = Uint8Array.from(atob(rec.authTag), c => c.charCodeAt(0));
-
-  // Combine ciphertext + authTag for Web Crypto AES-GCM
-  const combined = new Uint8Array(ciphertextBytes.length + authTagBytes.length);
-  combined.set(ciphertextBytes);
-  combined.set(authTagBytes, ciphertextBytes.length);
-
-  const cryptoKey = await window.crypto.subtle.importKey(
-    "raw",
-    keyBytes,
-    { name: "AES-GCM" },
-    false,
-    ["decrypt"]
-  );
-
-  const decryptedBuffer = await window.crypto.subtle.decrypt(
-    {
-      name: "AES-GCM",
-      iv: ivBytes,
-      additionalData: new TextEncoder().encode(rec.tag),
-      tagLength: 128
-    },
-    cryptoKey,
-    combined
-  );
-
-  return JSON.parse(new TextDecoder().decode(decryptedBuffer));
 }
 
 function renderDecryptedViewer(data) {
@@ -424,7 +440,7 @@ function renderDecryptedViewer(data) {
         <div>
           <strong>Tide Fabric Attestation:</strong> Emergent Authority consensus released session keys for <span class="underline">${data.policyUsed}</span>.
         </div>
-        <span class="bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded font-bold">14/20 Quorum Met</span>
+        <span class="bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded font-bold">${data.networkResult || "Live ORK Consensus Achieved"}</span>
       </div>
 
       <!-- Metrics Grid -->
@@ -472,8 +488,29 @@ function closeViewer() {
 }
 
 function showFabricRefusalModal(errorData) {
+  const modal = document.getElementById("fabric-refusal-modal");
   const reason = errorData.reason || "Access refused by Tide Fabric: Caller lacks active patient consent grant.";
-  alert(`⛔ TIDE FABRIC CRYPTOGRAPHIC REFUSAL\n\nContract: RelationshipAttestation:1\nError Code: ${errorData.error}\n\n${reason}\n\nConsensus Outcome: 0 of 20 ORK nodes approved. Key shares withheld.`);
+  if (!modal) {
+    alert("⛔ TIDE FABRIC REFUSAL: " + reason);
+    return;
+  }
+
+  const reasonEl = document.getElementById("refusal-modal-reason");
+  const contractEl = document.getElementById("refusal-modal-contract");
+  const approvedEl = document.getElementById("refusal-modal-approved");
+  const rejectedEl = document.getElementById("refusal-modal-rejected");
+
+  if (reasonEl) reasonEl.textContent = reason;
+  if (contractEl) contractEl.textContent = `Contract: ${errorData.contract || "RelationshipAttestation:1"} · Code: ${errorData.code || 403}`;
+  if (approvedEl) approvedEl.textContent = `${errorData.consensus?.orkApproved ?? 0} / ${errorData.consensus?.orkTotal ?? 20}`;
+  if (rejectedEl) rejectedEl.textContent = `${errorData.consensus?.orkRejected ?? 20} / ${errorData.consensus?.orkTotal ?? 20}`;
+
+  modal.classList.remove("hidden");
+}
+
+function closeFabricRefusalModal() {
+  const modal = document.getElementById("fabric-refusal-modal");
+  if (modal) modal.classList.add("hidden");
 }
 
 // --- GRANTS TABLE ---
@@ -515,7 +552,7 @@ function renderGrantsTable() {
         <td class="py-3 px-4 text-right">
           ${!isRevoked
             ? `<button onclick="revokePolicy('${p.policyId}')" class="text-xs text-rose-600 hover:text-rose-800 font-bold px-2 py-1 rounded hover:bg-rose-50 transition">Revoke Access</button>`
-            : '<span class="text-xs text-gray-400">Archived</span>'
+            : '<span class="text-xs text-gray-400 font-mono">Revoked on Fabric</span>'
           }
         </td>
       </tr>
@@ -525,8 +562,10 @@ function renderGrantsTable() {
 
 // --- GRANT MODAL ---
 function openGrantModal(recordId, recordTitle) {
-  document.getElementById("modal-record-id").value = recordId;
-  document.getElementById("modal-record-title").textContent = recordTitle;
+  const idEl = document.getElementById("grant-record-id");
+  const titleEl = document.getElementById("grant-record-title");
+  if (idEl) idEl.value = recordId;
+  if (titleEl) titleEl.value = recordTitle;
   document.getElementById("grant-modal").classList.remove("hidden");
 }
 
@@ -535,12 +574,15 @@ function closeGrantModal() {
 }
 
 async function submitGrant() {
-  const recordId = document.getElementById("modal-record-id").value;
+  const recordId = document.getElementById("grant-record-id").value;
   const clinicianKey = document.getElementById("grant-clinician-select").value;
   const duration = parseInt(document.getElementById("grant-duration-select").value);
 
   const profile = CLINICIAN_PROFILES[clinicianKey];
-  if (!profile) return;
+  if (!profile) {
+    showNotification("Validation Error", "Invalid clinician profile selected.", "error");
+    return;
+  }
 
   try {
     // Build binary RelationshipAttestation:1 policy using official SDK
@@ -552,11 +594,20 @@ async function submitGrant() {
       expiry: Math.floor(Date.now() / 1000) + duration * 3600
     });
 
-    const policyB64 = btoa(String.fromCharCode(...policyObj.toBytes()));
+    const policyBytes = policyObj.toBytes();
+    const policyB64 = btoa(String.fromCharCode(...policyBytes));
 
+    // Verify policy parameters using official Tide descriptor
+    const desc = describeRelationshipPolicy(policyB64);
+    console.log("RelationshipAttestation:1 policy generated:", desc);
+
+    const authHeaders = await getAuthHeaders();
     const res = await fetch("/api/policies", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...authHeaders
+      },
       body: JSON.stringify({
         recordId,
         subject: { type: "User", id: profile.id, name: profile.name, role: profile.role },
@@ -568,31 +619,54 @@ async function submitGrant() {
     if (res.ok) {
       closeGrantModal();
       await refreshAll();
-      alert(`✅ Access granted to ${profile.name}!\n\nRelationshipAttestation:1 policy signed and registered in Tide Fabric.`);
+      showNotification(
+        "Access Granted",
+        `RelationshipAttestation:1 policy signed and registered in Tide Fabric for ${profile.name}.`,
+        "success"
+      );
     } else {
       const err = await res.json();
-      alert("Failed to grant policy: " + err.error);
+      showNotification("Grant Failed", err.error || "Unable to register policy.", "error");
     }
   } catch (err) {
-    alert("Network error granting policy: " + err.message);
+    showNotification("Network Error", err.message, "error");
   }
 }
 
 async function revokePolicy(policyId) {
-  if (!confirm("Are you sure you want to revoke this clinician's access?")) return;
+  if (!confirm("Are you sure you want to revoke this clinician's access?\n\nThis will trigger zero-delay cryptographic revocation on Tide Fabric.")) return;
 
   try {
-    const policies = cachedPolicies.find(p => p.policyId === policyId);
-    if (policies) {
-      policies.status = "revoked";
-      policies.revokedAt = new Date().toISOString();
+    const authHeaders = await getAuthHeaders();
+    const res = await fetch("/api/policies/revoke", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...authHeaders
+      },
+      body: JSON.stringify({ policyId })
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Failed to execute revocation on server");
     }
-    renderGrantsTable();
-    renderPatientView();
-    if (currentRole.startsWith("clinician")) renderClinicianView();
-    fetchAuditLogs();
+
+    // Refresh policies and all views from server
+    await refreshAll();
+
+    // If currently on clinician view, re-render immediately to reflect revocation
+    if (currentRole.startsWith("clinician")) {
+      renderClinicianView();
+    }
+
+    showNotification(
+      "Revocation Enforced",
+      `Policy ${policyId} revoked. Tide Fabric consensus threshold reduced to 0/20.`,
+      "success"
+    );
   } catch (err) {
-    alert("Failed to revoke: " + err.message);
+    showNotification("Revocation Failed", err.message, "error");
   }
 }
 
@@ -704,6 +778,7 @@ function toggleAuditModal() {
 window.switchRole = switchRole;
 window.requestDecryption = requestDecryption;
 window.closeViewer = closeViewer;
+window.closeFabricRefusalModal = closeFabricRefusalModal;
 window.toggleAuditModal = toggleAuditModal;
 window.openGrantModal = openGrantModal;
 window.closeGrantModal = closeGrantModal;
@@ -711,3 +786,4 @@ window.submitGrant = submitGrant;
 window.revokePolicy = revokePolicy;
 window.fetchRawDatabase = fetchRawDatabase;
 window.simulateAdminOverride = simulateAdminOverride;
+window.showNotification = showNotification;
