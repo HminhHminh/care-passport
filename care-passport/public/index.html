@@ -72,14 +72,24 @@
         </div>
       </div>
 
-      <!-- Quick Trust Indicators -->
-      <div class="hidden md:flex items-center space-x-4 text-xs font-mono">
-        <div class="flex items-center space-x-1.5 bg-black/30 px-3 py-1.5 rounded-md border border-white/10">
+      <!-- Quick Trust Indicators & Live Auth -->
+      <div class="flex items-center space-x-3 text-xs font-mono">
+        <div class="hidden lg:flex items-center space-x-1.5 bg-black/30 px-3 py-1.5 rounded-md border border-white/10">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
           <span class="text-gray-300">Fabric Contract: <strong class="text-tide-accent">RelationshipAttestation:1</strong></span>
         </div>
-        <div class="flex items-center space-x-1.5 bg-black/30 px-3 py-1.5 rounded-md border border-white/10">
+        <div class="hidden lg:flex items-center space-x-1.5 bg-black/30 px-3 py-1.5 rounded-md border border-white/10">
           <span class="text-gray-300">Server Keys Held: <strong class="text-rose-400">0 (Zero-Knowledge)</strong></span>
+        </div>
+
+        <button id="tide-login-btn" class="bg-tide-accent hover:bg-emerald-400 text-tide-deeper font-bold px-3 py-1.5 rounded-lg shadow-sm transition flex items-center space-x-1.5">
+          <span>🔑</span>
+          <span>Sign In with Tide</span>
+        </button>
+        <div id="tide-user-badge" class="hidden items-center space-x-2 bg-emerald-950/80 border border-emerald-500/30 px-3 py-1 rounded-lg">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span id="tide-username" class="text-emerald-300 font-bold">Admin</span>
+          <button id="tide-logout-btn" class="text-gray-400 hover:text-white underline ml-2">Logout</button>
         </div>
       </div>
     </div>
@@ -459,6 +469,6 @@
   </div>
 
   <!-- SCRIPTS -->
-  <script src="/app.js"></script>
+  <script type="module" src="/app.js"></script>
 </body>
 </html>

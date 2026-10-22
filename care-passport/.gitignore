@@ -4,3 +4,8 @@ node_modules/
 .DS_Store
 *.log
 .tide-pack/
+scripts/jq
+data/keycloakdb*
+*.db
+**/ork_keys.json
+**/server_key.pem

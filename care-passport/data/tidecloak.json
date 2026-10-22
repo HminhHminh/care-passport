@@ -1,18 +1,1 @@
-{
-  "realm": "care-passport",
-  "auth-server-url": "https://mcp.tide.org/tidecloak",
-  "ssl-required": "external",
-  "resource": "care-passport-client",
-  "public-client": true,
-  "confidential-port": 0,
-  "vendorId": "tide-vendor-rmit-2026",
-  "homeOrkUrl": "https://mcp.tide.org/ork",
-  "jwk": {
-    "kty": "RSA",
-    "n": "zj1C1OR-3VHWmRCGFJ4juEgJgWqTS5AC9e1yYjtY5WkbVCWzjkSKyD1KUgfxMU0mPIds6nPf9CBMdkELgJVdvGzRMkRx1oqBBTSSGiS-h2DXgAKL-1IU3kmyfXE_fGDW1qkHuAwAIXeIYD3bP1NBcQTkd4897KxW6bTjqYs-ddoUDVrXZSCUMT6XM7WdlYvFBD3gMROu4wxX7kC-OefQNhTF9U0MF0AEsbZH_Desucnr_wK8FHhkQn_JWWZ_buGrplEX2ye85jycXibIh8rzn_CVg4sMRq7tP9_V86eiSLJj9Qe2CAvDu4924B2vErtJAmrqk7fRtU_aYwZ0epxvrQ",
-    "e": "AQAB",
-    "use": "sig",
-    "alg": "RS256",
-    "kid": "care-passport-vvk-key-2026"
-  }
-}
+{"realm":"care-passport","auth-server-url":"http://localhost:8080/","ssl-required":"external","resource":"care-passport-client","public-client":true,"confidential-port":0,"jwk":{"keys":[{"kid":"obQrxIm38q9_KW9YDSPnzVHnhwdlzsysNkW9-XH6T5s","kty":"OKP","alg":"EdDSA","use":"sig","crv":"Ed25519","x":"hYKqwwwbyyidPTYaYmlB2YB2pRM4-rir1IBBcbu4QeI"}]},"backgroundUrl":"http://localhost:8080/realms/care-passport/tide-idp-resources/images/BACKGROUND_IMAGE","logoUrl":"http://localhost:8080/realms/care-passport/tide-idp-resources/images/LOGO","homeOrkUrl":"https://ork1.tideprotocol.com","vendorId":"03054760-24ce-43a4-9b38-47ca2412fcde","client-origin-auth-http://localhost:8088":"r5CAoRgGt3e2OExRTzP0q8pEOvftTGReedzAATFNJXor4157XqN6VjbZp2UesIzH/PoW/30yI3lMH5bogLNuDQ==","client-origin-auth-http://localhost:8080":"Zrhn8b5GqNrqcKAQerdsYn9slGJg61+P6Gpc6iap42a4QL9Lvb9F5NB0RCk76tgRd57kNykzyEDhke29AtDeBQ==","gVVK":"8582AAC30C1BCB289D3D361A626941D98076A51338FAB8ABD4804171BBB841E2","vvkId":"03054760-24ce-43a4-9b38-47ca2412fcde","orkUrl":"https://ork1.tideprotocol.com","payerPublic":"200000b967a7799ffd4476e1074777ebc83bec23a3843cb2e5ca43c83561802c8e646b","obfGVVK":"8582AAC30C1BCB289D3D361A626941D98076A51338FAB8ABD4804171BBB841E2","gVRKCertificate":"c4F+BLvdKCRVJl5yKGwjFezKE1s7wZAFJewajWL++WtU+MIcfuCykxa3pMoXSG2e1GT2lPhLGAofgVetZQ7WDA==","thresholdT":14,"thresholdN":20}
