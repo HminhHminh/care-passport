@@ -37,7 +37,7 @@ Care Passport is a zero-knowledge medical records exchange powered by TideCloak.
 
 ### 📖 Full Interactive Testing Walkthrough
 For the complete step-by-step demonstration and manual testing guide across all personas, see:
-👉 [TESTING_WALKTHROUGH.md](file:///care-passport/TESTING_WALKTHROUGH.md)
+👉 [care-passport/TESTING_WALKTHROUGH.md](care-passport/TESTING_WALKTHROUGH.md)
 
 ### Key Interactive Flows to Try
 - **Patient Dashboard**: Sarah Connor reviews records and grants access to Dr. Marcus Chen (Cardiology) or CardioScan-AI.
