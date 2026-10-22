@@ -124,13 +124,19 @@
           <span class="text-[10px] bg-black/30 text-blue-300 px-1.5 py-0.5 rounded uppercase font-mono">Cardiologist</span>
         </button>
 
-        <!-- Rogue Admin Simulator -->
+        <!-- Autonomous Diagnostic AI -->
+        <button onclick="switchRole('cardioscan_ai')" id="tab-cardioscan_ai" class="role-tab px-3.5 py-1.5 rounded-lg flex items-center space-x-2 transition-all font-medium bg-purple-950/60 text-purple-300 border border-purple-500/30 hover:bg-purple-900/50">
+          <span>🤖 CardioScan-AI</span>
+          <span class="text-[10px] bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded uppercase font-mono font-bold">Diagnostic Agent</span>
+        </button>
+
+        <!-- Rogue Admin & Subpoena Simulator -->
         <button onclick="switchRole('rogue_admin')" id="tab-rogue_admin" class="role-tab px-3.5 py-1.5 rounded-lg flex items-center space-x-2 transition-all font-medium bg-rose-950/60 text-rose-300 border border-rose-500/30 hover:bg-rose-900/50">
           <span class="relative flex h-2 w-2">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
           </span>
-          <span>🚨 Rogue Admin Simulator</span>
+          <span>🚨 Rogue Admin & Subpoena Simulator</span>
           <span class="text-[10px] bg-rose-500/20 px-1.5 py-0.5 rounded uppercase font-mono font-bold text-rose-200">Breach Audit</span>
         </button>
       </nav>
@@ -215,7 +221,7 @@
       <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div class="flex items-start space-x-4">
-            <div class="w-12 h-12 rounded-xl bg-tide-teal text-white flex items-center justify-center font-bold text-xl shadow">
+            <div id="clinician-icon" class="w-12 h-12 rounded-xl bg-tide-teal text-white flex items-center justify-center font-bold text-xl shadow">
               🩺
             </div>
             <div>
@@ -224,7 +230,7 @@
                 <span class="text-xs font-mono bg-tide-light text-tide-teal px-2 py-0.5 rounded font-bold" id="clinician-role-badge">General Practitioner</span>
               </div>
               <p class="text-xs text-gray-500 font-mono mt-0.5" id="clinician-key-badge">ID: usr_key_dr_marcus_gp_987 · Role: _tide_decryptor</p>
-              <p class="text-sm text-gray-600 mt-2">
+              <p class="text-sm text-gray-600 mt-2" id="clinician-desc-text">
                 You are viewing Patient <strong class="text-gray-900">Sarah Connor</strong>'s records vault. Records decrypt <span class="underline decoration-tide-accent decoration-2">only</span> when Tide Fabric verifies an active patient consent grant.
               </p>
             </div>
@@ -422,10 +428,11 @@
       </div>
 
       <div>
-        <label class="block text-xs font-mono text-gray-600 mb-1">Select Verified Clinician</label>
+        <label class="block text-xs font-mono text-gray-600 mb-1">Select Verified Clinician or Autonomous AI</label>
         <select id="grant-clinician-select" class="w-full border rounded-lg px-3 py-2 text-sm text-gray-800 focus:ring-2 focus:ring-tide-accent">
           <option value="dr_marcus">Dr. Alice Marcus (General Practitioner) — Role: clinician_gp</option>
           <option value="dr_chen">Dr. Marcus Chen (Cardiologist) — Role: clinician_specialist</option>
+          <option value="cardioscan_ai">🤖 CardioScan-AI (Autonomous TEE Diagnostic Agent) — Role: diagnostic_ai</option>
           <option value="dr_vance">Dr. Elena Vance (Psychiatrist) — Role: clinician_specialist</option>
         </select>
       </div>
@@ -433,6 +440,7 @@
       <div>
         <label class="block text-xs font-mono text-gray-600 mb-1">Grant Expiry Duration</label>
         <select id="grant-duration-select" class="w-full border rounded-lg px-3 py-2 text-sm text-gray-800">
+          <option value="1">1 Hour (Ephemeral AI Inference Window - Zero Retention)</option>
           <option value="24">24 Hours (Temporary Consult)</option>
           <option value="72" selected>72 Hours (Standard Referral)</option>
           <option value="720">30 Days (Ongoing Treatment Plan)</option>

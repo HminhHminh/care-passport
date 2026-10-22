@@ -1,5 +1,113 @@
 [
   {
+    "policyId": "pol_rel_mvjb1w9v",
+    "contractId": "RelationshipAttestation:1",
+    "recordId": "rec_cardio_9812",
+    "subject": {
+      "type": "User",
+      "id": "usr_key_ai_cardioscan_v3",
+      "name": "CardioScan-AI Diagnostic Agent",
+      "role": "diagnostic_ai"
+    },
+    "access": "read",
+    "policyB64": "AQAAAHoBAAABAAAAAQAAADQZAAAAUmVsYXRpb25zaGlwQXR0ZXN0YXRpb246MT4AAAABAAAAGQAAAFBvbGljeUVuYWJsZWRFbmNyeXB0aW9uOjEZAAAAUG9saWN5RW5hYmxlZERlY3J5cHRpb246MSQAAAAwMzA1NDc2MC0yNGNlLTQzYTQtOWIzOC00N2NhMjQxMmZjZGUIAAAASU1QTElDSVQHAAAAUFJJVkFURcMAAAABAAAAIgAAAAEAAAALAAAAc3ViamVjdFR5cGUDAAAAc3RyBAAAAFVzZXI0AAAAAQAAAAkAAABzdWJqZWN0SWQDAAAAc3RyGAAAAHVzcl9rZXlfYWlfY2FyZGlvc2Nhbl92My4AAAABAAAADAAAAGFzc2lnbm1lbnRJZAMAAABzdHIPAAAAcmVjX2NhcmRpb185ODEyKwAAAAEAAAAFAAAAcm9sZXMDAAAAc3RyEwAAAFsiX3RpZGVfZGVjcnlwdG9yIl0IAAAAZN3ZagAAAAA=",
+    "grantedBy": "sarah_connor",
+    "createdAt": "2026-10-22T08:54:44.131Z",
+    "status": "revoked",
+    "revokedAt": "2026-10-22T08:54:44.145Z",
+    "revokedBy": "sarah_connor"
+  },
+  {
+    "policyId": "pol_rel_mvjb1w71",
+    "contractId": "RelationshipAttestation:1",
+    "recordId": "rec_cardio_9812",
+    "subject": {
+      "type": "User",
+      "id": "usr_key_dr_chen_cardio_456",
+      "name": "Dr. Marcus Chen",
+      "role": "clinician_specialist"
+    },
+    "access": "read",
+    "policyB64": "AQAAAHwBAAABAAAAAQAAADQZAAAAUmVsYXRpb25zaGlwQXR0ZXN0YXRpb246MT4AAAABAAAAGQAAAFBvbGljeUVuYWJsZWRFbmNyeXB0aW9uOjEZAAAAUG9saWN5RW5hYmxlZERlY3J5cHRpb246MSQAAAAwMzA1NDc2MC0yNGNlLTQzYTQtOWIzOC00N2NhMjQxMmZjZGUIAAAASU1QTElDSVQHAAAAUFJJVkFURcUAAAABAAAAIgAAAAEAAAALAAAAc3ViamVjdFR5cGUDAAAAc3RyBAAAAFVzZXI2AAAAAQAAAAkAAABzdWJqZWN0SWQDAAAAc3RyGgAAAHVzcl9rZXlfZHJfY2hlbl9jYXJkaW9fNDU2LgAAAAEAAAAMAAAAYXNzaWdubWVudElkAwAAAHN0cg8AAAByZWNfY2FyZGlvXzk4MTIrAAAAAQAAAAUAAAByb2xlcwMAAABzdHITAAAAWyJfdGlkZV9kZWNyeXB0b3IiXQgAAADUw91qAAAAAA==",
+    "grantedBy": "sarah_connor",
+    "createdAt": "2026-10-22T08:54:44.029Z",
+    "status": "revoked",
+    "revokedAt": "2026-10-22T08:54:44.039Z",
+    "revokedBy": "sarah_connor"
+  },
+  {
+    "policyId": "pol_rel_mvjas1pa",
+    "contractId": "RelationshipAttestation:1",
+    "recordId": "rec_cardio_9812",
+    "subject": {
+      "type": "User",
+      "id": "usr_key_ai_cardioscan_v3",
+      "name": "CardioScan-AI Diagnostic Agent",
+      "role": "diagnostic_ai"
+    },
+    "access": "read",
+    "policyB64": "AQAAAHoBAAABAAAAAQAAADQZAAAAUmVsYXRpb25zaGlwQXR0ZXN0YXRpb246MT4AAAABAAAAGQAAAFBvbGljeUVuYWJsZWRFbmNyeXB0aW9uOjEZAAAAUG9saWN5RW5hYmxlZERlY3J5cHRpb246MSQAAAAwMzA1NDc2MC0yNGNlLTQzYTQtOWIzOC00N2NhMjQxMmZjZGUIAAAASU1QTElDSVQHAAAAUFJJVkFURcMAAAABAAAAIgAAAAEAAAALAAAAc3ViamVjdFR5cGUDAAAAc3RyBAAAAFVzZXI0AAAAAQAAAAkAAABzdWJqZWN0SWQDAAAAc3RyGAAAAHVzcl9rZXlfYWlfY2FyZGlvc2Nhbl92My4AAAABAAAADAAAAGFzc2lnbm1lbnRJZAMAAABzdHIPAAAAcmVjX2NhcmRpb185ODEyKwAAAAEAAAAFAAAAcm9sZXMDAAAAc3RyEwAAAFsiX3RpZGVfZGVjcnlwdG9yIl0IAAAAmNvZagAAAAA=",
+    "grantedBy": "sarah_connor",
+    "createdAt": "2026-10-22T08:47:04.606Z",
+    "status": "revoked",
+    "revokedAt": "2026-10-22T08:47:04.617Z",
+    "revokedBy": "sarah_connor"
+  },
+  {
+    "policyId": "pol_rel_mvjas1mw",
+    "contractId": "RelationshipAttestation:1",
+    "recordId": "rec_cardio_9812",
+    "subject": {
+      "type": "User",
+      "id": "usr_key_dr_chen_cardio_456",
+      "name": "Dr. Marcus Chen",
+      "role": "clinician_specialist"
+    },
+    "access": "read",
+    "policyB64": "AQAAAHwBAAABAAAAAQAAADQZAAAAUmVsYXRpb25zaGlwQXR0ZXN0YXRpb246MT4AAAABAAAAGQAAAFBvbGljeUVuYWJsZWRFbmNyeXB0aW9uOjEZAAAAUG9saWN5RW5hYmxlZERlY3J5cHRpb246MSQAAAAwMzA1NDc2MC0yNGNlLTQzYTQtOWIzOC00N2NhMjQxMmZjZGUIAAAASU1QTElDSVQHAAAAUFJJVkFURcUAAAABAAAAIgAAAAEAAAALAAAAc3ViamVjdFR5cGUDAAAAc3RyBAAAAFVzZXI2AAAAAQAAAAkAAABzdWJqZWN0SWQDAAAAc3RyGgAAAHVzcl9rZXlfZHJfY2hlbl9jYXJkaW9fNDU2LgAAAAEAAAAMAAAAYXNzaWdubWVudElkAwAAAHN0cg8AAAByZWNfY2FyZGlvXzk4MTIrAAAAAQAAAAUAAAByb2xlcwMAAABzdHITAAAAWyJfdGlkZV9kZWNyeXB0b3IiXQgAAAAIwt1qAAAAAA==",
+    "grantedBy": "sarah_connor",
+    "createdAt": "2026-10-22T08:47:04.520Z",
+    "status": "revoked",
+    "revokedAt": "2026-10-22T08:47:04.528Z",
+    "revokedBy": "sarah_connor"
+  },
+  {
+    "policyId": "pol_rel_mvjaq5jp",
+    "contractId": "RelationshipAttestation:1",
+    "recordId": "rec_cardio_9812",
+    "subject": {
+      "type": "User",
+      "id": "usr_key_ai_cardioscan_v3",
+      "name": "CardioScan-AI Diagnostic Agent",
+      "role": "diagnostic_ai"
+    },
+    "access": "read",
+    "policyB64": "AQAAAHoBAAABAAAAAQAAADQZAAAAUmVsYXRpb25zaGlwQXR0ZXN0YXRpb246MT4AAAABAAAAGQAAAFBvbGljeUVuYWJsZWRFbmNyeXB0aW9uOjEZAAAAUG9saWN5RW5hYmxlZERlY3J5cHRpb246MSQAAAAwMzA1NDc2MC0yNGNlLTQzYTQtOWIzOC00N2NhMjQxMmZjZGUIAAAASU1QTElDSVQHAAAAUFJJVkFURcMAAAABAAAAIgAAAAEAAAALAAAAc3ViamVjdFR5cGUDAAAAc3RyBAAAAFVzZXI0AAAAAQAAAAkAAABzdWJqZWN0SWQDAAAAc3RyGAAAAHVzcl9rZXlfYWlfY2FyZGlvc2Nhbl92My4AAAABAAAADAAAAGFzc2lnbm1lbnRJZAMAAABzdHIPAAAAcmVjX2NhcmRpb185ODEyKwAAAAEAAAAFAAAAcm9sZXMDAAAAc3RyEwAAAFsiX3RpZGVfZGVjcnlwdG9yIl0IAAAAQNvZagAAAAA=",
+    "grantedBy": "sarah_connor",
+    "createdAt": "2026-10-22T08:45:36.277Z",
+    "status": "revoked",
+    "revokedAt": "2026-10-22T08:45:36.293Z",
+    "revokedBy": "sarah_connor"
+  },
+  {
+    "policyId": "pol_rel_mvjaq5gp",
+    "contractId": "RelationshipAttestation:1",
+    "recordId": "rec_cardio_9812",
+    "subject": {
+      "type": "User",
+      "id": "usr_key_dr_chen_cardio_456",
+      "name": "Dr. Marcus Chen",
+      "role": "clinician_specialist"
+    },
+    "access": "read",
+    "policyB64": "AQAAAHwBAAABAAAAAQAAADQZAAAAUmVsYXRpb25zaGlwQXR0ZXN0YXRpb246MT4AAAABAAAAGQAAAFBvbGljeUVuYWJsZWRFbmNyeXB0aW9uOjEZAAAAUG9saWN5RW5hYmxlZERlY3J5cHRpb246MSQAAAAwMzA1NDc2MC0yNGNlLTQzYTQtOWIzOC00N2NhMjQxMmZjZGUIAAAASU1QTElDSVQHAAAAUFJJVkFURcUAAAABAAAAIgAAAAEAAAALAAAAc3ViamVjdFR5cGUDAAAAc3RyBAAAAFVzZXI2AAAAAQAAAAkAAABzdWJqZWN0SWQDAAAAc3RyGgAAAHVzcl9rZXlfZHJfY2hlbl9jYXJkaW9fNDU2LgAAAAEAAAAMAAAAYXNzaWdubWVudElkAwAAAHN0cg8AAAByZWNfY2FyZGlvXzk4MTIrAAAAAQAAAAUAAAByb2xlcwMAAABzdHITAAAAWyJfdGlkZV9kZWNyeXB0b3IiXQgAAACwwd1qAAAAAA==",
+    "grantedBy": "sarah_connor",
+    "createdAt": "2026-10-22T08:45:36.169Z",
+    "status": "revoked",
+    "revokedAt": "2026-10-22T08:45:36.179Z",
+    "revokedBy": "sarah_connor"
+  },
+  {
     "policyId": "pol_rel_mvj8oamr",
     "contractId": "RelationshipAttestation:1",
     "recordId": "rec_cardio_9812",

@@ -322,11 +322,25 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // 7. GET /api/audit-log
-  if (req.method === "GET" && pathname === "/api/audit-log") {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(auditLogs));
-    return;
+  // 7. GET & POST /api/audit-log (Tide Fabric Consensus Event Stream)
+  if (pathname === "/api/audit-log") {
+    if (req.method === "GET") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(auditLogs));
+      return;
+    }
+    if (req.method === "POST") {
+      const payload = await getBody(req);
+      const entry = logAudit(
+        payload.event || "FABRIC_EVENT",
+        payload.contract || "RelationshipAttestation:1",
+        payload.details || "Event recorded",
+        payload.status || "SUCCESS"
+      );
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, entry }));
+      return;
+    }
   }
 
   // 8. POST /api/rogue-admin/override

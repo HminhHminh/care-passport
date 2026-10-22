@@ -46,6 +46,14 @@ const CLINICIAN_PROFILES = {
     role: "clinician_specialist",
     color: "blue"
   },
+  cardioscan_ai: {
+    id: "usr_key_ai_cardioscan_v3",
+    name: "CardioScan-AI Diagnostic Agent",
+    title: "Autonomous Deep Learning Model (TEE Enclave)",
+    role: "diagnostic_ai",
+    color: "purple",
+    isAI: true
+  },
   dr_vance: {
     id: "usr_key_dr_vance_psych_789",
     name: "Dr. Elena Vance",
@@ -102,8 +110,10 @@ function showNotification(title, message, type = "info") {
 // --- INITIALIZATION ---
 document.addEventListener("DOMContentLoaded", async () => {
   renderOrkNodes(20, 0);
-  await initTideAuth();
+  // Render records and UI immediately so the application is instantly interactive
   await refreshAll();
+  // Initialize TideCloak SSO in background with timeout protection
+  initTideAuth();
   setInterval(fetchAuditLogs, 5000);
 });
 
@@ -113,10 +123,14 @@ async function initTideAuth() {
     const tcConfig = await configRes.json();
 
     if (IAMService && typeof IAMService.initIAM === "function") {
-      await IAMService.initIAM({
+      const initPromise = IAMService.initIAM({
         ...tcConfig,
         useDPoP: { mode: "strict", alg: "ES256" }
       });
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("TideCloak SSO server not reachable (demo context active)")), 2500)
+      );
+      await Promise.race([initPromise, timeoutPromise]);
       updateAuthUI();
 
       IAMService.on("authRefreshSuccess", updateAuthUI);
@@ -125,7 +139,7 @@ async function initTideAuth() {
       });
     }
   } catch (err) {
-    console.warn("TideCloak init notification:", err.message);
+    console.warn("TideCloak SSO notification (operating in demo context):", err.message);
   }
 
   // Wire login/logout buttons
@@ -194,6 +208,8 @@ function switchRole(role) {
       activeTab.className = "role-tab px-3.5 py-1.5 rounded-lg flex items-center space-x-2 transition-all font-medium bg-tide-accent text-tide-deeper shadow-sm font-bold";
     } else if (role === "rogue_admin") {
       activeTab.className = "role-tab px-3.5 py-1.5 rounded-lg flex items-center space-x-2 transition-all font-medium bg-rose-600 text-white font-bold shadow-sm";
+    } else if (role === "cardioscan_ai") {
+      activeTab.className = "role-tab px-3.5 py-1.5 rounded-lg flex items-center space-x-2 transition-all font-medium bg-gradient-to-r from-purple-700 to-indigo-800 text-white font-bold shadow-md ring-2 ring-purple-400/50";
     } else {
       activeTab.className = "role-tab px-3.5 py-1.5 rounded-lg flex items-center space-x-2 transition-all font-medium bg-tide-teal text-white font-bold shadow-sm";
     }
@@ -216,7 +232,23 @@ function switchRole(role) {
     if (profile) {
       document.getElementById("clinician-name-heading").textContent = profile.name;
       document.getElementById("clinician-role-badge").textContent = profile.title;
-      document.getElementById("clinician-key-badge").textContent = `ID: ${profile.id} · Role: _tide_decryptor (${profile.role})`;
+      const isAI = !!profile.isAI;
+      const iconEl = document.getElementById("clinician-icon");
+      if (iconEl) {
+        iconEl.textContent = isAI ? "🤖" : "🩺";
+        iconEl.className = isAI
+          ? "w-12 h-12 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold text-xl shadow"
+          : "w-12 h-12 rounded-xl bg-tide-teal text-white flex items-center justify-center font-bold text-xl shadow";
+      }
+      const descEl = document.getElementById("clinician-desc-text");
+      if (descEl) {
+        descEl.innerHTML = isAI
+          ? `Autonomous diagnostic agent operating inside a hardware-isolated <strong class="text-gray-900">Confidential TEE Enclave</strong>. Records decrypt strictly into volatile RAM for inference computation. Tide Fabric mathematically prohibits lateral training data ingestion.`
+          : `You are viewing Patient <strong class="text-gray-900">Sarah Connor</strong>'s records vault. Records decrypt <span class="underline decoration-tide-accent decoration-2">only</span> when Tide Fabric verifies an active patient consent grant.`;
+      }
+      document.getElementById("clinician-key-badge").textContent = isAI
+        ? `ID: ${profile.id} · Role: _tide_decryptor (Hardware TEE Enclave)`
+        : `ID: ${profile.id} · Role: _tide_decryptor (${profile.role})`;
     }
     renderClinicianView();
   }
@@ -228,7 +260,7 @@ async function fetchRecords() {
     const res = await fetch("/api/records");
     cachedRecords = await res.json();
     renderPatientView();
-    if (currentRole.startsWith("clinician")) renderClinicianView();
+    if (currentRole.startsWith("clinician") || currentRole === "cardioscan_ai") renderClinicianView();
   } catch (err) {
     console.error("Failed to fetch records", err);
   }
@@ -240,7 +272,7 @@ async function fetchPolicies() {
     cachedPolicies = await res.json();
     renderGrantsTable();
     if (currentRole === "patient") renderPatientView();
-    if (currentRole.startsWith("clinician")) renderClinicianView();
+    if (currentRole.startsWith("clinician") || currentRole === "cardioscan_ai") renderClinicianView();
   } catch (err) {
     console.error("Failed to fetch policies", err);
   }
@@ -312,13 +344,15 @@ function renderPatientView() {
   }).join('');
 }
 
-// --- CLINICIAN VIEW ---
+// --- CLINICIAN & AI VIEW ---
 function renderClinicianView() {
   const container = document.getElementById("clinician-records-grid");
   if (!container) return;
 
   const profile = CLINICIAN_PROFILES[currentRole];
   if (!profile) return;
+
+  const isAI = !!profile.isAI;
 
   container.innerHTML = cachedRecords.map(rec => {
     const activeGrant = cachedPolicies.find(p =>
@@ -329,8 +363,55 @@ function renderClinicianView() {
 
     const isGranted = !!activeGrant;
 
+    let statusPillHtml;
+    let buttonHtml;
+
+    if (isAI) {
+      statusPillHtml = `
+        <div class="p-3 rounded-xl mb-4 font-mono text-xs ${isGranted ? 'bg-purple-50 text-purple-900 border border-purple-200' : 'bg-rose-50 text-rose-800 border border-rose-200'}">
+          <div class="flex items-center space-x-2 font-bold">
+            <span>${isGranted ? '🔓 INFERENCE AUTHORIZATION ACTIVE' : '🔒 LATERAL EXFILTRATION MATHEMATICALLY BLOCKED'}</span>
+          </div>
+          <p class="text-[11px] mt-1 ${isGranted ? 'text-purple-700' : 'text-rose-700'}">
+            ${isGranted ? 'RelationshipAttestation:1 verified for CardioScan-AI. Ephemeral session key emergence permitted.' : 'No active patient grant exists for CardioScan-AI. Tide Fabric strictly forbids lateral model scraping.'}
+          </p>
+        </div>
+      `;
+
+      buttonHtml = `
+        <button onclick="requestDecryption('${rec.id}')" class="w-full py-2.5 rounded-xl font-bold text-xs transition shadow-sm flex items-center justify-center space-x-2 ${
+          isGranted
+            ? 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-purple-500/20'
+            : 'bg-gray-800 hover:bg-gray-900 text-purple-300 border border-purple-500/30'
+        }">
+          <span>${isGranted ? '🤖 Run Autonomous Inference (Volatile RAM)' : '🤖 Attempt Lateral Crawl / Model Ingestion'}</span>
+        </button>
+      `;
+    } else {
+      statusPillHtml = `
+        <div class="p-3 rounded-xl mb-4 font-mono text-xs ${isGranted ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-rose-50 text-rose-800 border border-rose-200'}">
+          <div class="flex items-center space-x-2 font-bold">
+            <span>${isGranted ? '🔓 DECRYPTION PERMITTED' : '🔒 CRYPTOGRAPHICALLY SEALED'}</span>
+          </div>
+          <p class="text-[11px] mt-1 ${isGranted ? 'text-emerald-700' : 'text-rose-700'}">
+            ${isGranted ? `RelationshipAttestation:1 verified for ${profile.name}.` : 'No active patient grant exists for your authenticated key.'}
+          </p>
+        </div>
+      `;
+
+      buttonHtml = `
+        <button onclick="requestDecryption('${rec.id}')" class="w-full py-2.5 rounded-xl font-bold text-xs transition shadow-sm flex items-center justify-center space-x-2 ${
+          isGranted
+            ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+            : 'bg-gray-800 hover:bg-gray-900 text-gray-200'
+        }">
+          <span>${isGranted ? '🔓 Decrypt Client-Side (Tide Quorum)' : '🔒 Test Access / Attempt Decryption'}</span>
+        </button>
+      `;
+    }
+
     return `
-      <div class="bg-white rounded-2xl p-6 shadow-sm border ${isGranted ? 'border-emerald-300 ring-2 ring-emerald-100' : 'border-gray-200'} flex flex-col justify-between">
+      <div class="bg-white rounded-2xl p-6 shadow-sm border ${isGranted ? (isAI ? 'border-purple-300 ring-2 ring-purple-100' : 'border-emerald-300 ring-2 ring-emerald-100') : 'border-gray-200'} flex flex-col justify-between">
         <div>
           <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-mono uppercase bg-gray-100 text-gray-700 px-2 py-0.5 rounded font-bold">${rec.category}</span>
@@ -340,31 +421,17 @@ function renderClinicianView() {
           <h3 class="text-base font-bold text-gray-900 leading-snug mb-1">${rec.title}</h3>
           <p class="text-xs text-gray-500 font-mono mb-4">${rec.facility}</p>
 
-          <!-- Access Status Pill -->
-          <div class="p-3 rounded-xl mb-4 font-mono text-xs ${isGranted ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-rose-50 text-rose-800 border border-rose-200'}">
-            <div class="flex items-center space-x-2 font-bold">
-              <span>${isGranted ? '🔓 DECRYPTION PERMITTED' : '🔒 CRYPTOGRAPHICALLY SEALED'}</span>
-            </div>
-            <p class="text-[11px] mt-1 ${isGranted ? 'text-emerald-700' : 'text-rose-700'}">
-              ${isGranted ? `RelationshipAttestation:1 verified for ${profile.name}.` : 'No active patient grant exists for your authenticated key.'}
-            </p>
-          </div>
+          ${statusPillHtml}
         </div>
 
-        <button onclick="requestDecryption('${rec.id}')" class="w-full py-2.5 rounded-xl font-bold text-xs transition shadow-sm flex items-center justify-center space-x-2 ${
-          isGranted
-            ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-            : 'bg-gray-800 hover:bg-gray-900 text-gray-200'
-        }">
-          <span>${isGranted ? '🔓 Decrypt Client-Side (Tide Quorum)' : '🔒 Test Access / Attempt Decryption'}</span>
-        </button>
+        ${buttonHtml}
       </div>
     `;
   }).join('');
 }
 
 // --- CLIENT-SIDE DECRYPTION ENGINE ---
-// Invariant I-11 & I-01: Decryption runs 100% in the browser.
+// Invariant I-11 & I-01: Decryption runs 100% in the browser / client enclave.
 // The server has ZERO decryption keys and never touches plaintext.
 async function requestDecryption(recordId) {
   const profile = CLINICIAN_PROFILES[currentRole];
@@ -377,14 +444,20 @@ async function requestDecryption(recordId) {
     ((p.subject && p.subject.id === profile.id) || p.subjectId === profile.id || p.subjectRole === profile.role)
   );
 
+  const isAI = !!profile.isAI;
+
   if (!activeGrant) {
     // Access Refused by Tide Fabric Consensus
     renderOrkNodes(0, 20); // 0/20 approved
+    const refusalReason = isAI
+      ? `Access refused by Tide Fabric: Autonomous Agent (${profile.name}) attempted unauthorized lateral access to record ${recordId}. Sarah Connor has not granted inference rights for this record. Lateral model training scraping is mathematically prohibited by 0/20 ORK Quorum.`
+      : `Access refused by Tide Fabric: Caller (${profile.name}) has no active grant from Patient for record ${recordId}. Threshold consensus failed.`;
+
     showFabricRefusalModal({
       error: "TIDE-TIDEJS-NET-THRESHOLD_FAILURE",
       code: 403,
       contract: "RelationshipAttestation:1",
-      reason: `Access refused by Tide Fabric: Caller (${profile.name}) has no active grant from Patient for record ${recordId}. Threshold consensus failed.`,
+      reason: refusalReason,
       consensus: {
         orkTotal: 20,
         orkApproved: 0,
@@ -393,6 +466,21 @@ async function requestDecryption(recordId) {
         consensusAchieved: false
       }
     });
+
+    // Record Fabric refusal event to audit stream
+    try {
+      await fetch("/api/audit-log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event: isAI ? "AI_AUTONOMOUS_EXFILTRATION_BLOCKED" : "FABRIC_DECRYPTION_REFUSED",
+          contract: "RelationshipAttestation:1",
+          details: refusalReason,
+          status: "DENIED"
+        })
+      });
+    } catch (e) {}
+
     fetchAuditLogs();
     return;
   }
@@ -408,10 +496,28 @@ async function requestDecryption(recordId) {
       patientName: rec.patientName,
       policyUsed: activeGrant.policyId,
       clinicalData: clinicalData,
-      networkResult: "Consensus Verified (Emergent Authority)"
+      networkResult: isAI ? "TEE Enclave In-Memory Consensus Achieved" : "Consensus Verified (Emergent Authority)",
+      isAI: isAI
     });
 
     renderOrkNodes(20, 0); // 20/20 active consensus
+
+    // Record successful attestation
+    try {
+      await fetch("/api/audit-log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event: isAI ? "AI_INFERENCE_DECRYPTION_AUTHORIZED" : "FABRIC_DECRYPTION_AUTHORIZED",
+          contract: "RelationshipAttestation:1",
+          details: isAI
+            ? `CardioScan-AI executed ephemeral in-memory inference on ${recordId}. 0 training retention.`
+            : `Tide Fabric 14/20 consensus reached for ${profile.name} on record ${recordId}. Emergent keys released.`,
+          status: "SUCCESS"
+        })
+      });
+    } catch (e) {}
+
     fetchAuditLogs();
   } catch (err) {
     console.error("Tide Emergent Authority Decryption Failure:", err);
@@ -433,51 +539,133 @@ function renderDecryptedViewer(data) {
 
   title.textContent = `${data.title} — ${data.patientName}`;
   const cd = data.clinicalData;
+  const isAI = !!data.isAI;
 
-  content.innerHTML = `
-    <div class="space-y-4">
-      <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs font-mono text-emerald-800 flex justify-between items-center">
+  if (isAI) {
+    // Render specialized Autonomous AI Inference Dashboard
+    content.innerHTML = `
+      <div class="space-y-4 font-mono text-xs">
+        <div class="p-3.5 bg-gradient-to-r from-purple-900 to-indigo-900 text-white rounded-xl border border-purple-400/40 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+          <div>
+            <span class="font-bold text-purple-200">🤖 CardioScan-Vision-v3.4 Deep Learning Inference</span>
+            <div class="text-[11px] text-purple-300 mt-0.5">Execution Enclave: Volatile Memory Only · 0 Training Retention · Non-Ingestion Guarantee</div>
+          </div>
+          <span class="bg-purple-500/20 text-purple-200 border border-purple-400/30 px-2.5 py-1 rounded-full font-bold text-[10px]">14/20 ORK Quorum Active</span>
+        </div>
+
         <div>
-          <strong>Tide Fabric Attestation:</strong> Emergent Authority consensus released session keys for <span class="underline">${data.policyUsed}</span>.
-        </div>
-        <span class="bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded font-bold">${data.networkResult || "Live ORK Consensus Achieved"}</span>
-      </div>
-
-      <!-- Metrics Grid -->
-      <div>
-        <h4 class="text-xs font-mono uppercase tracking-wider text-gray-500 font-bold mb-2">Clinical Biomarkers & Diagnostic Metrics:</h4>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          ${(cd.metrics || []).map(m => `
-            <div class="bg-gray-50 p-3 rounded-xl border border-gray-200">
-              <span class="text-[11px] text-gray-500 block truncate">${m.name}</span>
+          <h4 class="text-xs uppercase tracking-wider text-gray-500 font-bold mb-2">Automated Neural Biomarker Extraction:</h4>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div class="bg-purple-50 p-3 rounded-xl border border-purple-200">
+              <span class="text-[11px] text-purple-700 block truncate">LAD Luminal Stenosis</span>
               <div class="flex items-baseline space-x-1 mt-0.5">
-                <span class="text-lg font-bold text-gray-900">${m.value}</span>
-                <span class="text-xs text-gray-500">${m.unit}</span>
+                <span class="text-lg font-bold text-purple-950">85.4%</span>
+                <span class="text-xs text-purple-600">Occlusion</span>
               </div>
-              <div class="flex items-center justify-between text-[10px] mt-1 font-mono">
-                <span class="text-emerald-700 font-semibold">${m.status}</span>
-                <span class="text-gray-400">Ref: ${m.ref}</span>
-              </div>
+              <span class="text-[10px] text-rose-600 font-bold">Severe Plaque Burden</span>
             </div>
-          `).join('')}
+
+            <div class="bg-purple-50 p-3 rounded-xl border border-purple-200">
+              <span class="text-[11px] text-purple-700 block truncate">Fractional Flow Reserve</span>
+              <div class="flex items-baseline space-x-1 mt-0.5">
+                <span class="text-lg font-bold text-purple-950">0.72</span>
+                <span class="text-xs text-purple-600">FFR</span>
+              </div>
+              <span class="text-[10px] text-rose-600 font-bold">Ischemia Confirmed</span>
+            </div>
+
+            <div class="bg-purple-50 p-3 rounded-xl border border-purple-200">
+              <span class="text-[11px] text-purple-700 block truncate">CAC Agatston Score</span>
+              <div class="flex items-baseline space-x-1 mt-0.5">
+                <span class="text-lg font-bold text-purple-950">412</span>
+                <span class="text-xs text-purple-600">AU</span>
+              </div>
+              <span class="text-[10px] text-amber-700 font-bold">High Vascular Risk</span>
+            </div>
+
+            <div class="bg-purple-50 p-3 rounded-xl border border-purple-200">
+              <span class="text-[11px] text-purple-700 block truncate">Diagnostic Confidence</span>
+              <div class="flex items-baseline space-x-1 mt-0.5">
+                <span class="text-lg font-bold text-purple-950">99.2%</span>
+                <span class="text-xs text-purple-600">ROC-AUC 0.98</span>
+              </div>
+              <span class="text-[10px] text-emerald-700 font-bold">High Certainty</span>
+            </div>
+
+            <div class="bg-purple-50 p-3 rounded-xl border border-purple-200">
+              <span class="text-[11px] text-purple-700 block truncate">LVEF Analysis</span>
+              <div class="flex items-baseline space-x-1 mt-0.5">
+                <span class="text-lg font-bold text-purple-950">52%</span>
+                <span class="text-xs text-purple-600">Simpsons</span>
+              </div>
+              <span class="text-[10px] text-emerald-700 font-bold">Preserved Function</span>
+            </div>
+
+            <div class="bg-purple-50 p-3 rounded-xl border border-purple-200">
+              <span class="text-[11px] text-purple-700 block truncate">Ischemic Segment</span>
+              <div class="flex items-baseline space-x-1 mt-0.5">
+                <span class="text-lg font-bold text-purple-950">Anteroapical</span>
+              </div>
+              <span class="text-[10px] text-amber-700 font-bold">Moderate Defect</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-purple-950/10 p-4 rounded-xl border border-purple-500/30 text-xs">
+          <h4 class="uppercase tracking-wider text-purple-900 font-bold mb-1">Autonomous Clinical Intervention Recommendation:</h4>
+          <p class="text-purple-950 leading-relaxed font-sans font-medium">
+            Urgent specialist referral for Percutaneous Coronary Intervention (PCI) of LAD lesion. Ephemeral inference computation complete. All decrypted plaintext remains strictly in volatile enclave RAM and will be purged upon session termination or policy revocation. Zero training data retained.
+          </p>
         </div>
       </div>
+    `;
+  } else {
+    // Render Standard Clinician Dashboard
+    content.innerHTML = `
+      <div class="space-y-4">
+        <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs font-mono text-emerald-800 flex justify-between items-center">
+          <div>
+            <strong>Tide Fabric Attestation:</strong> Emergent Authority consensus released session keys for <span class="underline">${data.policyUsed}</span>.
+          </div>
+          <span class="bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded font-bold">${data.networkResult || "Live ORK Consensus Achieved"}</span>
+        </div>
 
-      <!-- Diagnoses -->
-      <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
-        <h4 class="text-xs font-mono uppercase tracking-wider text-gray-500 font-bold mb-1">Attending Diagnoses:</h4>
-        <ul class="list-disc list-inside text-xs text-gray-800 space-y-1 font-medium">
-          ${(cd.diagnoses || []).map(d => `<li>${d}</li>`).join('')}
-        </ul>
-      </div>
+        <!-- Metrics Grid -->
+        <div>
+          <h4 class="text-xs font-mono uppercase tracking-wider text-gray-500 font-bold mb-2">Clinical Biomarkers & Diagnostic Metrics:</h4>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            ${(cd.metrics || []).map(m => `
+              <div class="bg-gray-50 p-3 rounded-xl border border-gray-200">
+                <span class="text-[11px] text-gray-500 block truncate">${m.name}</span>
+                <div class="flex items-baseline space-x-1 mt-0.5">
+                  <span class="text-lg font-bold text-gray-900">${m.value}</span>
+                  <span class="text-xs text-gray-500">${m.unit}</span>
+                </div>
+                <div class="flex items-center justify-between text-[10px] mt-1 font-mono">
+                  <span class="text-emerald-700 font-semibold">${m.status}</span>
+                  <span class="text-gray-400">Ref: ${m.ref}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
 
-      <!-- Physician Clinical Notes -->
-      <div class="bg-tide-light p-4 rounded-xl border border-tide-accent/30">
-        <h4 class="text-xs font-mono uppercase tracking-wider text-tide-teal font-bold mb-1">Confidential Clinical Notes:</h4>
-        <p class="text-xs text-tide-dark leading-relaxed font-sans">${cd.clinicalNotes || ""}</p>
+        <!-- Diagnoses -->
+        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+          <h4 class="text-xs font-mono uppercase tracking-wider text-gray-500 font-bold mb-1">Attending Diagnoses:</h4>
+          <ul class="list-disc list-inside text-xs text-gray-800 space-y-1 font-medium">
+            ${(cd.diagnoses || []).map(d => `<li>${d}</li>`).join('')}
+          </ul>
+        </div>
+
+        <!-- Physician Clinical Notes -->
+        <div class="bg-tide-light p-4 rounded-xl border border-tide-accent/30">
+          <h4 class="text-xs font-mono uppercase tracking-wider text-tide-teal font-bold mb-1">Confidential Clinical Notes:</h4>
+          <p class="text-xs text-tide-dark leading-relaxed font-sans">${cd.clinicalNotes || ""}</p>
+        </div>
       </div>
-    </div>
-  `;
+    `;
+  }
 
   modal.classList.remove("hidden");
   modal.scrollIntoView({ behavior: "smooth" });
@@ -655,8 +843,8 @@ async function revokePolicy(policyId) {
     // Refresh policies and all views from server
     await refreshAll();
 
-    // If currently on clinician view, re-render immediately to reflect revocation
-    if (currentRole.startsWith("clinician")) {
+    // If currently on clinician or AI view, re-render immediately to reflect revocation
+    if (currentRole.startsWith("clinician") || currentRole === "cardioscan_ai") {
       renderClinicianView();
     }
 
