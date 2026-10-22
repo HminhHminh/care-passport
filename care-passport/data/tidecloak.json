@@ -1,0 +1,18 @@
+{
+  "realm": "care-passport",
+  "auth-server-url": "https://mcp.tide.org/tidecloak",
+  "ssl-required": "external",
+  "resource": "care-passport-client",
+  "public-client": true,
+  "confidential-port": 0,
+  "vendorId": "tide-vendor-rmit-2026",
+  "homeOrkUrl": "https://mcp.tide.org/ork",
+  "jwk": {
+    "kty": "RSA",
+    "n": "zj1C1OR-3VHWmRCGFJ4juEgJgWqTS5AC9e1yYjtY5WkbVCWzjkSKyD1KUgfxMU0mPIds6nPf9CBMdkELgJVdvGzRMkRx1oqBBTSSGiS-h2DXgAKL-1IU3kmyfXE_fGDW1qkHuAwAIXeIYD3bP1NBcQTkd4897KxW6bTjqYs-ddoUDVrXZSCUMT6XM7WdlYvFBD3gMROu4wxX7kC-OefQNhTF9U0MF0AEsbZH_Desucnr_wK8FHhkQn_JWWZ_buGrplEX2ye85jycXibIh8rzn_CVg4sMRq7tP9_V86eiSLJj9Qe2CAvDu4924B2vErtJAmrqk7fRtU_aYwZ0epxvrQ",
+    "e": "AQAB",
+    "use": "sig",
+    "alg": "RS256",
+    "kid": "care-passport-vvk-key-2026"
+  }
+}

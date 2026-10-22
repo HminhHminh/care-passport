@@ -1,0 +1,50 @@
+[
+  {
+    "id": "rec_lipid_1044",
+    "title": "Routine Comprehensive Metabolic & Lipid Panel",
+    "category": "general_practice",
+    "patientName": "Sarah Connor",
+    "patientId": "pt_sc_8841",
+    "date": "2026-09-14",
+    "facility": "St. Jude Metropolitan Health Hub",
+    "attendingPhysician": "Dr. Alice Marcus, MD (GP)",
+    "tag": "rec_lipid_1044",
+    "ciphertext": "FnZckEcdBo1GzX3Ip56KBlOh8T+40jayuhGEUdLOao5SD6t89gyVijH8v8Q73ICRZGHXElmXuBw8Ly9fEjmGf/YZ6adzVSWPaW4zRzcvrMCpHHEgwq6KYX4HZXNdLDOoVPRPBXEaLCM7dDQpKM1irEtrvkoIe3lR2+DPqTBiC3wnoiCgZrKCfgFfxhM8QNgAsYM9IJDoZ9A96csPpbxEVm0j6pX3+oNHJRvhr0jYPHlJb2bPzfMWmFtg7pLGmHD8nEleaRcPq/SuE1I5MakDNysKC8tGLUvgjgKis2c7W7oQS1jajEsCdE+ThUd0Syy5DTpf0NimfjoFI6Go5Cdxg44ch2tnHHTtINBYr6wTv+ZAk7DpvrepK0zm0koTW4Cr8PPdbMM+c9Sv22r3Y6YDYoToFSPH1E+45XwXGEUuW/IoytzlclvKJOYW9Vl0Sc1xCFoMKrsVj2y63gQZbMKosceKrpeW3tmQVMll1nQIpPXEBznGZV+Lt1YCWs3D7fqEanhhlPA/J3I/UKXjitEvYOhuHvlJKq4hfvqUP12GOQOAsVOXc7G4YETkevVs8d3QTw5Th8vqszYLpn7eFvHFdDb7xZbP3UiJ/bcK9ByqPUcrvrDjsNbDUKB6K2Dpsk1s7WzEYodrUs+EQIioZErMNjDBygRVZFYJEjbXkDmhLII0EZ479b22JJrQnPB9TFd+Ha5vqreY67Q82PhOn3HHJkkG7+96VaJqgGoWB26v3uiDQkWdnWNVHhWLyzifdnJy3qDPlD643mQb2BfYnb72sFcTMrhRJNaeKS66RqVWMPvJojC6GAkYJdM+ueOmv5vcBbUpWFdBIH5GKPobPrvhSvdrUdvbP89lEsMAy4FSYV5ZvDTUyLJEPcN0J4j2S7aKkdPGXJ+J5a29hiPiRtF3TjaI10bBzLCCAmQ4qGpf82vDRZjLru44lOXIlj1DA0PRSj7ZZX8mnDcA7qjs1cSFeUVHI9DmYdOK/xyHuA1J+u2gPKEPws2s/Pn0v3U7DEfkQ24HRZC4db/KUfbwsQCRJ+MxetfUaNxT3LbJ6zsZplhk69kKQjtyY2d5P3vMSi+k1B4c3nQct1NgI8XmQmZ0t5iw",
+    "iv": "VCwDhIYaQB7Ck4Kq",
+    "authTag": "YdExej2uXk9wSUPixgySYg==",
+    "policyContract": "RelationshipAttestation:1",
+    "lastEncrypted": "2026-10-22T03:30:57.222Z"
+  },
+  {
+    "id": "rec_cardio_9812",
+    "title": "Cardiology Diagnostic Angiogram & Echocardiogram",
+    "category": "cardiology",
+    "patientName": "Sarah Connor",
+    "patientId": "pt_sc_8841",
+    "date": "2026-10-02",
+    "facility": "Austin Specialist Heart Centre",
+    "attendingPhysician": "Dr. Marcus Chen, MBBS FRACP (Cardiologist)",
+    "tag": "rec_cardio_9812",
+    "ciphertext": "+qb0gVFqpFg/dBYteZir3K0iAxyxD8iLwnNNWnspR6RTOTBakBbVUaGkWhgwz9bemd05jPoROuGgnjYWMQBklJcOE/Rneteac9nZ3UTUQaWEbo8ycdsdjw5EGZHUvr7xUFyajwCM43VFPQki0ZB4MSFWHZRIB1r4yjVgaV+i+vwRR7LP4awnQNHGqhugdeeCP/85jkTv8ZmTRSnFZaMGHtSpueuODRwkVZD882s601d2rGzeLc3DuB5FVcXnwUegUJ08Av2PKosri6CCvYWhFlqVC6RPVD5joDvYJhr2B/X9mNYGFr/aELWzPJ4Zl0VWFBU6s/OTf5YbWip/RvosfTvOLXF5gBKjJooPAlPMX+ZyEEhaIgBs7DPcDPyYJ1Hbcg9EV7j439+WRJJE3IOw4c6bL5yu3vKNSJmT3hZQEgD3r8W26uXt9z+wGMWc09WFBkF7nW9jJJ8invAvNQDONmx6Lh8Ygn8ZYnpugjbBXpYpNd0qldWkTZgrSLwTdrWqnWCwE8WbgndHn5d2jfwU7RFxo4GZl39w9p2UdFylfYESMaAjnmzekUwApK6IbOpt8gACCAxuJwAUM0S81z59zW7soZQF/id7ZuMVjq1sPK3HDF1Q8EDornCtUqFUTqpSGnEtJ/Dd7EW9PEKeapHvKBCtANqLS7EM68eSypivkXbBKtEWCvG9Rbs5dkdD2bGplH78NjWq9aoFu0EqjQ/D6+thOR6q5NyF6L8DpQmxZbORdXddVSHPCFI/XKlDcooxLVSn46l/ZgZbpMhXCOjWIG1s0b3BhWuXMU6tJUXGjqHy3IVwHspuuKwQ7jelLARzijFQyXQIy1BcOnmPYd/ZNGjk/LICCibjije7EvY2MupomeJ6I5CElWjUbTeAo5tb4lGJuncGbNLdoava1kc+E1RObU5Xy4vQVub/cIYZB/fnbCsxSyshfTmtbbmGz124uJUVzpMYaAlr8augDubS2UKeav5OQPtWDh87TSosPBkPFDkdrtrwiFmvqhYfUHn2x9pEPQVLyHwe/cSrpN+oM6eXbTQVCdBG9MbkmZHmTc6o2bGlvn6nOvNotPmsejwf0LTRphMOZP2xb0yOSl35TZU43FcB7EYjlzonMMdvsPNHuJ5od3H9zEYeCPi7SujWrxxVqOQQjJwW+zlAgR+IJHnnuxaPbCYFHadjWg==",
+    "iv": "+32ddD/axQ3JHile",
+    "authTag": "RS05GsHiAK4ceOPqu5Ru1g==",
+    "policyContract": "RelationshipAttestation:1",
+    "lastEncrypted": "2026-10-22T03:30:57.222Z"
+  },
+  {
+    "id": "rec_psych_4509",
+    "title": "Clinical Psychiatric & Trauma Evaluation",
+    "category": "mental_health",
+    "patientName": "Sarah Connor",
+    "patientId": "pt_sc_8841",
+    "date": "2026-10-18",
+    "facility": "Private Consulting Suites - Behavioral Medicine",
+    "attendingPhysician": "Dr. Elena Vance, MD FRANZCP (Consultant Psychiatrist)",
+    "tag": "rec_psych_4509",
+    "ciphertext": "spUbSm0JZuFqbauCX6LK1LfmEs4U1BwJLnqLBpgr3HuuFCIKbSlGfEHNGfu8rJaOf/nntV+ROY1WM6NABjEYUHQ8I99XQkaJo0ZwQobMltI/tQeW93bDQu889Q/LFPuh3bbcQnHfGvdXqFcdJQ8GchNwdL8JzkIkssr/8bXVMS3Ll6AvRKImSVneSLE16Qui9I7Kmu8w2Unky74DAA3NxbKbFWZVaYYvKz0ByXtsJX8enKqF0AifnjwnY/2sdKmCNCtSj4C/ZgpIVPMzVrLySfMXbt0eL+PnaKCZzJPtC78N9okxjSGIIUAdSrNbWQ0rXbs26HaRdgbRpZYKUjDPrRyKKJXVWTljQPYqWb0GH2Z4TXacbf9zCDU18wnU98SnRJbov+jh5F0azIfn2CvWxI4TSTF7sJzghToLpoVlaWPzfmWG2qnmx50FNIwZE/KpzXq2X3aeSfM+llswbWHPxoeRQCVjY3tu3i0dJ2thsaHZA3V2zZnezDJ5VYwfSWCfMIWesSd923LH8LaUivIkdn51Qrt2eUL8UvWdLmH/wNNwG0wzC+yYDM3p0OpjfjQnpsNVZO8Et72FQqyAY4sI9deMLXDxcXaPAxZcQTsjLOpcbZBjujDvre8we7gSAnwLNJkGUaovzeUHRa5QhFRa72bFLh2PIUy38yCGwEKZWwDlWjqYxBt1NCssskL6HKG4NvCj3GXPZSZHpYa91nYuCsW0yPhGlMTn/wEj6VBSD8IHt4LssvX0TBEXjNYpeL4USkJnqEPuAUAlaGwDBG4HpH6Cnit76psIygIO7+d63gKbwiJd3HlvMyZpdAB0jmji1CMfdzY9assyGTHZkZVeQosRnN1G0AKa4zBZ3vOuwLjsEwPMiIDqYtJoZ42/pE7y5szC4ES8Xa/yQxDK+xoiTcsrifeDW78aEJQFcQ/mhcLmiwhvb6lbdEJmxGlDnHyIuEIUmLph+1339eDDyNqKoccLnKR8Y8vcflZ+bg==",
+    "iv": "8uq5IwlTxJlKiRJo",
+    "authTag": "C+DssqcCYIDJUAs6yIhTKg==",
+    "policyContract": "RelationshipAttestation:1",
+    "lastEncrypted": "2026-10-22T03:30:57.222Z"
+  }
+]

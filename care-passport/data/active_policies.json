@@ -1,0 +1,138 @@
+[
+  {
+    "policyId": "pol_rel_mvj0dzbk",
+    "contractId": "RelationshipAttestation:1",
+    "modelIds": [
+      "PolicyEnabledEncryption:1",
+      "PolicyEnabledDecryption:1"
+    ],
+    "executionType": "PRIVATE",
+    "approvalType": "IMPLICIT",
+    "recordId": "rec_psych_4509",
+    "subjectType": "User",
+    "subjectId": "usr_key_dr_marcus_gp_987",
+    "subjectName": "Dr. Alice Marcus",
+    "subjectRole": "clinician_gp",
+    "roles": [
+      "_tide_decryptor"
+    ],
+    "status": "revoked",
+    "createdAt": "2026-10-22T03:56:12.176Z",
+    "expiresAt": "2026-10-22T15:56:12.176Z",
+    "signature": "vvk_sig_f10c3a36bfa6a8380a28da863719ae0d407690a1dbaa183800085f589f3c1c5e",
+    "revokedAt": "2026-10-22T03:56:12.179Z"
+  },
+  {
+    "policyId": "pol_rel_mvj0dmvi",
+    "contractId": "RelationshipAttestation:1",
+    "modelIds": [
+      "PolicyEnabledEncryption:1",
+      "PolicyEnabledDecryption:1"
+    ],
+    "executionType": "PRIVATE",
+    "approvalType": "IMPLICIT",
+    "recordId": "rec_psych_4509",
+    "subjectType": "User",
+    "subjectId": "usr_key_dr_marcus_gp_987",
+    "subjectName": "Dr. Alice Marcus",
+    "subjectRole": "clinician_gp",
+    "roles": [
+      "_tide_decryptor"
+    ],
+    "status": "revoked",
+    "createdAt": "2026-10-22T03:55:56.046Z",
+    "expiresAt": "2026-10-22T15:55:56.046Z",
+    "signature": "vvk_sig_860b308e10844c84ecb5e31dc9790b4fe5119a605833255898dee88f1e1a9836",
+    "revokedAt": "2026-10-22T03:55:56.049Z"
+  },
+  {
+    "policyId": "pol_rel_mvj0cbis",
+    "contractId": "RelationshipAttestation:1",
+    "modelIds": [
+      "PolicyEnabledEncryption:1",
+      "PolicyEnabledDecryption:1"
+    ],
+    "executionType": "PRIVATE",
+    "approvalType": "IMPLICIT",
+    "recordId": "rec_psych_4509",
+    "subjectType": "User",
+    "subjectId": "usr_key_dr_marcus_gp_987",
+    "subjectName": "Dr. Alice Marcus",
+    "subjectRole": "clinician_gp",
+    "roles": [
+      "_tide_decryptor"
+    ],
+    "status": "revoked",
+    "createdAt": "2026-10-22T03:54:54.676Z",
+    "expiresAt": "2026-10-22T15:54:54.676Z",
+    "signature": "vvk_sig_5d62a927f07da048697dd09c4fb5fa8c4880c158e1ded161724367ed9051a81a",
+    "revokedAt": "2026-10-22T03:54:54.680Z"
+  },
+  {
+    "policyId": "pol_rel_mviznvd9",
+    "contractId": "RelationshipAttestation:1",
+    "modelIds": [
+      "PolicyEnabledEncryption:1",
+      "PolicyEnabledDecryption:1"
+    ],
+    "executionType": "PRIVATE",
+    "approvalType": "IMPLICIT",
+    "recordId": "rec_psych_4509",
+    "subjectType": "User",
+    "subjectId": "usr_key_dr_marcus_gp_987",
+    "subjectName": "Dr. Alice Marcus",
+    "subjectRole": "clinician_gp",
+    "roles": [
+      "_tide_decryptor"
+    ],
+    "status": "revoked",
+    "createdAt": "2026-10-22T03:35:53.997Z",
+    "expiresAt": "2026-10-23T03:35:53.997Z",
+    "signature": "vvk_sig_5c7d4dd486cc0e83da43671e57462b4478bc14939cefb3b2e16def368b722c8a",
+    "revokedAt": "2026-10-22T03:35:54.009Z"
+  },
+  {
+    "policyId": "pol_rel_lipid_marcus",
+    "contractId": "RelationshipAttestation:1",
+    "modelIds": [
+      "PolicyEnabledEncryption:1",
+      "PolicyEnabledDecryption:1"
+    ],
+    "executionType": "PRIVATE",
+    "approvalType": "IMPLICIT",
+    "recordId": "rec_lipid_1044",
+    "subjectType": "User",
+    "subjectId": "usr_key_dr_marcus_gp_987",
+    "subjectName": "Dr. Alice Marcus (General Practitioner)",
+    "subjectRole": "clinician_gp",
+    "roles": [
+      "_tide_decryptor"
+    ],
+    "status": "active",
+    "createdAt": "2026-10-20T03:30:57.223Z",
+    "expiresAt": "2026-11-21T03:30:57.223Z",
+    "signature": "vvk_sig_d6051d7c9889d7bc6a52b5e0d7ae87bfef18760e2a00839981d41982051e6901"
+  },
+  {
+    "policyId": "pol_rel_cardio_chen",
+    "contractId": "RelationshipAttestation:1",
+    "modelIds": [
+      "PolicyEnabledEncryption:1",
+      "PolicyEnabledDecryption:1"
+    ],
+    "executionType": "PRIVATE",
+    "approvalType": "IMPLICIT",
+    "recordId": "rec_cardio_9812",
+    "subjectType": "User",
+    "subjectId": "usr_key_dr_chen_cardio_456",
+    "subjectName": "Dr. Marcus Chen (Cardiologist)",
+    "subjectRole": "clinician_specialist",
+    "roles": [
+      "_tide_decryptor"
+    ],
+    "status": "active",
+    "createdAt": "2026-10-21T03:30:57.223Z",
+    "expiresAt": "2026-11-05T03:30:57.223Z",
+    "signature": "vvk_sig_6c5313900bc63c7e08b6d94ae210d96f45a3e0281ee551ce39e61126b3a1b774"
+  }
+]

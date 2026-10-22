@@ -1,0 +1,20 @@
+{
+  "name": "care-passport",
+  "version": "1.0.0",
+  "description": "Patient-Governed Health Records Exchange via TideCloak Emergent Authority",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "python3 -c \"import socket; s = socket.socket(); exit(s.connect_ex(('127.0.0.1', 8088)))\" && python3 test.py || (node server.js & PID=$! && sleep 1 && python3 test.py && kill $PID)"
+  },
+  "keywords": [
+    "tidecloak",
+    "emergent-authority",
+    "e2ee",
+    "healthcare",
+    "privacy",
+    "rmit-hackathon"
+  ],
+  "author": "Care Passport Team",
+  "license": "MIT"
+}
