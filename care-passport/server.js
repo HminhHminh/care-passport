@@ -64,18 +64,19 @@ const MIME_TYPES = {
   ".ico": "image/x-icon"
 };
 
-// Helper: parse JSON body
+// Helper: parse JSON body safely
 function getBody(req) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     let data = "";
     req.on("data", chunk => { data += chunk; });
     req.on("end", () => {
       try {
         resolve(data ? JSON.parse(data) : {});
       } catch (err) {
-        reject(err);
+        resolve({});
       }
     });
+    req.on("error", () => resolve({}));
   });
 }
 
@@ -120,18 +121,19 @@ async function authenticateRequest(req, allowDemo = true) {
 }
 
 const server = http.createServer(async (req, res) => {
-  // CORS & Security Headers
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, DPoP");
+  try {
+    // CORS & Security Headers
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, DPoP");
 
-  if (req.method === "OPTIONS") {
-    res.writeHead(204);
-    res.end();
-    return;
-  }
+    if (req.method === "OPTIONS") {
+      res.writeHead(204);
+      res.end();
+      return;
+    }
 
-  const parsedUrl = new URL(req.url, `http://${req.headers.host || "localhost"}`);
+    const parsedUrl = new URL(req.url, `http://${req.headers.host || "localhost"}`);
   const pathname = parsedUrl.pathname;
 
   // ----------------------------------------------------
@@ -403,6 +405,7 @@ const server = http.createServer(async (req, res) => {
   const contentType = MIME_TYPES[ext] || "application/octet-stream";
 
   fs.readFile(filePath, (err, content) => {
+    if (res.headersSent || res.writableEnded) return;
     if (err) {
       res.writeHead(404, { "Content-Type": "text/plain" });
       res.end("Not Found");
@@ -411,6 +414,26 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, { "Content-Type": contentType });
     res.end(content);
   });
+  } catch (err) {
+    console.error("Unhandled internal server error:", err);
+    if (!res.headersSent && !res.writableEnded) {
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Internal server error: " + err.message }));
+    }
+  }
+});
+
+// Resilient process & server error handlers
+server.on("error", (err) => {
+  console.error("HTTP Server Error:", err.message);
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception intercepted:", err.message);
+});
+
+process.on("unhandledRejection", (reason) => {
+  console.error("Unhandled Rejection intercepted:", reason);
 });
 
 server.listen(PORT, HOST, () => {
